@@ -17,7 +17,7 @@ struct Playlist {
     struct Playlist* next;
 };
 
-struct Node* createNode(char new_singer[], char new_title[], char new_album[], double new_time)
+struct Node* insertSong(char new_singer[], char new_title[], char new_album[], double new_time)
 {
     struct Node* new_node
         = (struct Node*)malloc(sizeof(struct Node));
@@ -36,7 +36,7 @@ struct Node* createNode(char new_singer[], char new_title[], char new_album[], d
 // dan jika head masih kosong, bakal assign node menjadi head
 struct Node* insertAtBeginning(struct Node* head, char new_singer[], char new_title[], char new_album[], double new_time) 
 {
-    struct Node* new_node = createNode(new_singer, new_title, new_album, new_time);
+    struct Node* new_node = insertSong(new_singer, new_title, new_album, new_time);
     if (head == NULL){
         return new_node;
     }
@@ -47,7 +47,7 @@ struct Node* insertAtBeginning(struct Node* head, char new_singer[], char new_ti
 // memasukan node kedalam rangkaian linkedlist ke paling belakang atau menjadi tail (ekor)
 struct Node* insertAtTheEnd(struct Node* head, char new_singer[], char new_title[], char new_album[], double new_time)
 {
-    struct Node* new_node = createNode(new_singer, new_title, new_album, new_time);
+    struct Node* new_node = insertSong(new_singer, new_title, new_album, new_time);
     if (head == NULL) {
         return new_node;
     }
@@ -65,7 +65,7 @@ struct Node* insertAtTheEnd(struct Node* head, char new_singer[], char new_title
 // dimasuki.
 struct Node* insertInSpesificIndex(struct Node* head, char new_singer[], char new_title[], char new_album[], double new_time, int index) 
 {
-    struct Node* new_node = createNode(new_singer, new_title, new_album, new_time);
+    struct Node* new_node = insertSong(new_singer, new_title, new_album, new_time);
     if (head == NULL) {
         return new_node;
     }
@@ -200,30 +200,30 @@ void inputData(struct Node** head)
 // menghapus node
 void deleteData(struct Node** head) {
     if (*head == NULL) {
-        printf("\nList kosong, tidak ada yang dapat dihapus.\n");
+        printf("\nPlayist kosong, tidak ada yang dapat dihapus.\n");
         return;
     }
 
     int choice, index;
-    printf("\n--- Hapus Data Mahasiswa ---\n");
+    printf("\n--- Hapus lagu dari playlist ---\n");
     printf("Pilih opsi penghapusan:\n");
-    printf("1. Hapus data di awal\n2. Hapus data di akhir\n3. Hapus data di posisi tertentu\nPilihan (1/2/3): ");
+    printf("1. Hapus lagu di awal playlist\n2. Hapus lagu di akhir playlist \n3. Hapus lagu di posisi tertentu\nPilihan (1/2/3): ");
     scanf("%d", &choice);
 
     switch (choice) {
         case 1:
             *head = deleteAtBeginning(*head);
-            printf("Data di awal berhasil dihapus.\n");
+            printf("Lagu di awal berhasil dihapus dari playlist.\n");
             break;
         case 2:
             *head = deleteAtEnd(*head);
-            printf("Data di akhir berhasil dihapus.\n");
+            printf("Lagu di akhir berhasil dihapus dari playlist.\n");
             break;
         case 3:
-            printf("Masukkan indeks data yang ingin dihapus (mulai dari 1): ");
+            printf("Masukkan indeks lagu yang ingin dihapus dari playlist (mulai dari 1): ");
             scanf("%d", &index);
             *head = deleteAtSpecificIndex(*head, index);
-            printf("Data di posisi ke-%d berhasil dihapus (jika ada).\n", index);
+            printf("Lagu di posisi ke-%d berhasil dihapus dari playlist (jika ada).\n", index);
             break;
         default:
             printf("Pilihan tidak valid.\n");
@@ -234,7 +234,17 @@ void deleteData(struct Node** head) {
 void printList(struct Node* head)
 {
     struct Node* curr = head;
-    printf("------>DATABASE MAHASISWA KELAS B<------\n");
+    char playlistName[] = "pujogans";
+    int judulWidth = 50;
+    int penyanyiWidth = 50;
+    int albumWidth = 50;
+    int waktuWidth = 6; // Time formatted as X.XX
+    int totalWidth = judulWidth + penyanyiWidth + albumWidth + waktuWidth + 3; // +3 for spaces between columns
+    int nameLength = strlen(playlistName);
+    int padding = (totalWidth - nameLength - 10) / 2; // 10 for "Playlist " and spaces
+
+    // Print the top line with the playlist name centered
+    printf("%.*s Playlist %s %.*s\n", padding, "=======================================================================================", playlistName, padding, "=======================================================================================");
 
     printf("%-50s %-50s %-50s %s\n", "Judul", "Penyanyi", "Album", "Waktu");
 
@@ -250,8 +260,8 @@ void printList(struct Node* head)
 // menu awal program
 void menu(char *action)
 {
-    printf("Selamat Datang di Database Mahasiswa Kelas B\n");
-    printf("1. Masukkan Data Mahasiswa\n2. Hapus Data Mahasiswa\n3. Lihat Data Mahasiswa\n4. Keluar\n");
+    printf("Selamat Datang di Spotijo\n Spotify nya Pujo\n");
+    printf("1. Masukkan lagu kedalam playlist\n2. Hapus lagu dari playlist\n3. Lihat playlist\n4. Keluar\n");
     printf("Pilihan (1/2/3/4): ");
     scanf("%c", action);
 }
