@@ -2,6 +2,7 @@
 
 Repository ini berisi source code dalam pembuatan aplikasi penyimpan list musik seperti spotify menggunakan bahasa C.
 Disusun oleh : 
+
 | Nama | NRP |
 | Paundra Pujo Darmawan | 5027241008 | 
 | Afriza Tristan Calendra Rajasa | 5027241104 |
