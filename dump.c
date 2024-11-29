@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 
 struct Node {
@@ -44,46 +45,42 @@ struct Node* insertAtBeginning(struct Node* head, char new_singer[], char new_ti
     return new_node;
 }
 
-// memasukan node kedalam rangkaian linkedlist ke paling belakang atau menjadi tail (ekor)
-struct Node* insertAtTheEnd(struct Node* head, char new_singer[], char new_title[], char new_album[], double new_time)
-{
-    struct Node* new_node = insertSong(new_singer, new_title, new_album, new_time);
-    if (head == NULL) {
-        return new_node;
-    }
-    struct Node* temp = head;
-    while(temp->next != NULL) {
-        temp = temp->next;
-    }
-
-    temp->next = new_node;
-
-    return head;
-}
-
-// memasukkan node kedalam rangkaian linkedlist ke indeks tertentu sesuai dengan panjang linkedlist yang akan 
-// dimasuki.
-struct Node* insertInSpesificIndex(struct Node* head, char new_singer[], char new_title[], char new_album[], double new_time, int index) 
-{
-    struct Node* new_node = insertSong(new_singer, new_title, new_album, new_time);
-    if (head == NULL) {
-        return new_node;
-    }
-    struct Node* temp = head;
-    int count = 1;
-    while(temp != NULL && count < index - 1) {
-        temp = temp->next;
-        count++;
-    }
-    if (temp == NULL) {
-        printf("Index lebih dari batas akhir\n");
-        return head;
-    }
-    new_node->next = temp->next;
-    temp->next = new_node;
-    
-    return head;
-}
+// // memasukan node kedalam rangkaian linkedlist ke paling belakang atau menjadi tail (ekor)
+// struct Node* insertAtTheEnd(struct Node* head, char new_singer[], char new_title[], char new_album[], double new_time)
+// {
+//     struct Node* new_node = insertSong(new_singer, new_title, new_album, new_time);
+//     if (head == NULL) {
+//         return new_node;
+//     }
+//     struct Node* temp = head;
+//     while(temp->next != NULL) {
+//         temp = temp->next;
+//     }
+//     temp->next = new_node;
+//     return head;
+// }
+// // memasukkan node kedalam rangkaian linkedlist ke indeks tertentu sesuai dengan panjang linkedlist yang akan 
+// // dimasuki.
+// struct Node* insertInSpesificIndex(struct Node* head, char new_singer[], char new_title[], char new_album[], double new_time, int index) 
+// {
+//     struct Node* new_node = insertSong(new_singer, new_title, new_album, new_time);
+//     if (head == NULL) {
+//         return new_node;
+//     }
+//     struct Node* temp = head;
+//     int count = 1;
+//     while(temp != NULL && count < index - 1) {
+//         temp = temp->next;
+//         count++;
+//     }
+//     if (temp == NULL) {
+//         printf("Index lebih dari batas akhir\n");
+//         return head;
+//     }
+//     new_node->next = temp->next;
+//     temp->next = new_node;
+//     return head;
+// }
 
 // menghapus node paling depan (head) dari rangkaian linkedlist
 struct Node* deleteAtBeginning(struct Node* head) 
@@ -173,28 +170,9 @@ void inputData(struct Node** head)
     printf("Masukkan panjang lagu (ex: 4.54, in minute): ");
     scanf(" %lf", &time);
 
-    printf("\nPilih posisi untuk memasukkan data:\n");
-    printf("1. Awal\n2. Akhir\n3. Posisi Tertentu\nPilihan (1/2/3): ");
-    scanf("%d", &choice);
+    *head = insertAtBeginning(*head, singer, title, album, time);
 
-    switch (choice) {
-        case 1:
-            *head = insertAtBeginning(*head, singer, title, album, time);
-            printf("Data berhasil dimasukkan di awal list.\n");
-            break;
-        case 2:
-            *head = insertAtTheEnd(*head, singer, title, album, time);
-            printf("Data berhasil dimasukkan di akhir list.\n");
-            break;
-        case 3:
-            printf("Masukkan indeks (mulai dari 1): ");
-            scanf("%d", &index);
-            *head = insertInSpesificIndex(*head, singer, title, album, time, index);
-            printf("Data berhasil dimasukkan di posisi ke-%d.\n", index);
-            break;
-        default:
-            printf("Pilihan tidak valid.\n");
-    }
+    printf("Data berhasil dimasukkan\n");
 }
 
 // menghapus node
@@ -235,13 +213,8 @@ void printList(struct Node* head)
 {
     struct Node* curr = head;
     char playlistName[] = "pujogans";
-    int judulWidth = 50;
-    int penyanyiWidth = 50;
-    int albumWidth = 50;
-    int waktuWidth = 6; // Time formatted as X.XX
-    int totalWidth = judulWidth + penyanyiWidth + albumWidth + waktuWidth + 3; // +3 for spaces between columns
     int nameLength = strlen(playlistName);
-    int padding = (totalWidth - nameLength - 10) / 2; // 10 for "Playlist " and spaces
+    int padding = (159 - nameLength - 10) / 2; // 10 for "Playlist " and spaces
 
     // Print the top line with the playlist name centered
     printf("%.*s Playlist %s %.*s\n", padding, "=======================================================================================", playlistName, padding, "=======================================================================================");
@@ -271,16 +244,23 @@ int main() {
     struct Node* head = NULL;
     bool cek = true;
     while(cek) {
+        system("clear");   
         menu(&action);
         if (action == '1') {
             inputData(&head); 
+            printf("\nTekan esc + enter untuk kembali ke menu...");
+            while (getchar() != 27);
         } else if (action == '2') {
             deleteData(&head); 
+            printf("\nTekan esc + enter untuk kembali ke menu...");
+            while (getchar() != 27);
         } else if (action == '3') {
             if (head == NULL) {
                 printf("\nList masih kosong.\n");
             } else {
                 printList(head); 
+                printf("\nTekan esc + enter untuk kembali ke menu...");
+                while (getchar() != 27);
             }
         } else if (action == '4') {
             printf("\nKeluar dari program.\n");
@@ -289,10 +269,6 @@ int main() {
         } else {
             printf("\nPilihan tidak valid.\n");
         }
-
-        getchar();
     }
-
-    getchar();
     return 0;
 }
