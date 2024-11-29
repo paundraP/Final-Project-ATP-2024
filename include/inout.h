@@ -3,6 +3,7 @@
 
 #include "dto.h"
 
-void printList(struct Playlist* head);
+void printSongInsidePlaylist(struct Playlist* head);
+void printPlaylist(struct Playlist* head);
 
 #endif 

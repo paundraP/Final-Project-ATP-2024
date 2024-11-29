@@ -38,11 +38,29 @@ void addSongtoPlaylist(struct Playlist* playlist, struct Song* song){
     }
 }
 
+struct Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
+    struct Playlist* new_playlist = createPlaylist(playlistname);
+    if(head == NULL){
+        return new_playlist;
+    }
+    struct Playlist* temp = head;
+    while(temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = new_playlist;
+    return head;
+    }
+
 int main() {
     struct Song* songs = createSong("the 1975", "about you", "dont know", 5.45);
+    struct Song* songs1 = createSong("the 1975", "about you", "dont know", 5.45);
     struct Playlist* playlists = createPlaylist("pujo ganteng");
     addSongtoPlaylist(playlists, songs);
-    printList(playlists);
+    addSongtoPlaylist(playlists, songs1);
+    playlists = addNewPlaylist(playlists, "Pujo sedih");
+    playlists = addNewPlaylist(playlists, "Pujo bahagia");
+    printPlaylist(playlists);
+    printSongInsidePlaylist(playlists);
     free(songs);
     free(playlists);
 
