@@ -19,6 +19,6 @@ make
 ```
 
 2.
-```
+```bash
 ./spotify
 ```
