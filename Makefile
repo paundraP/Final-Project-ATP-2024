@@ -37,3 +37,5 @@ clean:
 
 # Phony Targets
 .PHONY: all clean
+run:
+	build/spotify
