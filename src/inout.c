@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "dto.h"
-#include "inout.h"
 
 void printSongInsidePlaylist(struct Playlist* head) {
     struct Playlist* curr = head;
@@ -33,4 +32,20 @@ void printPlaylist(struct Playlist* head) {
         curr = curr->next;
     }
     printf("\n");
+}
+
+void dashboardMenu(char* choice){
+    // menampilkan pilihan menu awal seperti: 
+    // melihat seluruh playlist
+    // membuat playlist
+    // menambahkan lagu kedalaman playlist
+    // melihat detail playlist (lagu didalamnya)
+    // menghapus lagu didalam playlist
+    // simpan playlist kedalam sebuah file
+    // membaca file yang berisi playlist dan menampilkan di program
+    // keluar program
+}
+
+void playlistDetail(struct Playlist* head){
+    // nantinya buat ngesorting isi detail playlist jika user minta.
 }

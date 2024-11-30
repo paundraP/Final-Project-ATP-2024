@@ -45,3 +45,7 @@ struct Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
     temp->next = new_playlist;
     return head;
 }
+
+struct Playlist* deleteSongFromPlaylist(struct Playlist* head, char songName[]){
+    //implementasi disini
+}
