@@ -13,12 +13,12 @@ Disusun oleh :
 
 Untuk menjalankan aplikasi ini, bisa dilakukan dengan menjalankan beberapa command di terminal.
 
-1. 
+1. Pertama run command dibawah untuk compile code nya
 ```bash
 make
 ```
 
-2.
+2. lalu run binary codenya
 ```bash
-./spotify
+build/spotify
 ```
