@@ -32,3 +32,5 @@ make run
 - **src** : Direktori ini berisi penerapan logika dari fungsi fungsi tambahan yang sudah dideklarasikan pada direktori include. 
 
 - **main.c** : Entry point dari program spotify ini, penerapan fungsi fungsi pembantu yang sudah dideklarasikan pada direktori include.
+
+- **playlist** : Isi dari playlist playlist yang sudah dibuat
