@@ -97,21 +97,18 @@ void dashboardMenu(struct Playlist* head){
 
 
 int main() {
-    struct Playlist* playlists = NULL;
-    dashboardMenu(playlists);
-    // Song* songs = createSong("the 1975", "zimbabwe", "dont know", 5.45);
-    // Song* songs1 = createSong("cas", "testing", "dont know", 6.32);
-    // Playlist* playlists = createPlaylist("pujo ganteng");
-    // addSongtoPlaylist(playlists, songs);
-    // addSongtoPlaylist(playlists, songs1);
-    // playlists = addNewPlaylist(playlists, "Pujo sedih");
-    // playlists = addNewPlaylist(playlists, "Pujo bahagia");
-    // printPlaylist(playlists);
-    // printSongInsidePlaylist(playlists);
-    // sortByMinute(songs);
-    // sortByTitle(songs);
-    // printSongInsidePlaylist(playlists);
-    // free(songs);
+    Playlist* playlists = createPlaylist("pujo ganteng");
+    Song* songs = createSong("the 1975", "zimbabwe", "dont know", 5.45);
+    Song* songs1 = createSong("cas", "testing", "dont know", 6.32);
+    Song* songs2 = createSong("test", "test", "test", 5.4);
+    playlists = addNewPlaylist(playlists, "Pujo sedih");
+    addSongtoPlaylist(playlists, songs);
+    addSongtoPlaylist(playlists, songs1);
+    printPlaylist(playlists);
+    sortByTitle(songs);
+    printSongInsidePlaylist(playlists);
+    savePlaylist(playlists, 1);
+    free(songs);
     free(playlists);
 
     return 0;
