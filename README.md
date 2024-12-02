@@ -20,5 +20,5 @@ make
 
 2. lalu run binary codenya
 ```bash
-build/spotify
+make run
 ```
