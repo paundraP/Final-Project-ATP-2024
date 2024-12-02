@@ -41,8 +41,9 @@ void playlistDetail(Playlist* head){
     // nantinya buat ngesorting isi detail playlist jika user minta.
 }
 
-void dashboardMenu(struct Playlist* head){
+void dashboardMenu(Playlist* head){
     char choice;
+    char playlistName[50];
 
     do {
         printf("\n--- Song App Menu ---\n");
@@ -57,7 +58,6 @@ void dashboardMenu(struct Playlist* head){
         getchar();
         switch (choice) {
             case 'a':
-                char playlistName[50];
                 printf("Enter playlist name: ");
                 fgets(playlistName, sizeof(playlistName), stdin); 
                 playlistName[strcspn(playlistName, "\n")] = '\0';
@@ -98,7 +98,7 @@ void dashboardMenu(struct Playlist* head){
 
 int main() {
     struct Playlist* playlists = NULL;
-    dashboardMenu(playlists);
+    // dashboardMenu(playlists);
     // Song* songs = createSong("the 1975", "zimbabwe", "dont know", 5.45);
     // Song* songs1 = createSong("cas", "testing", "dont know", 6.32);
     // Playlist* playlists = createPlaylist("pujo ganteng");
