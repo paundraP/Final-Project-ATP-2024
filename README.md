@@ -7,7 +7,10 @@ Disusun oleh :
 | Nama | NRP |
 | ------ | ----- |
 | Paundra Pujo Darmawan | 5027241008 | 
+| Ahmad Idza Anafin | 5027241017 | 
+| Putu Yudi Nandanjaya Wiraguna | 5027241080 |
 | Afriza Tristan Calendra Rajasa | 5027241104 |
+
 
 ## Run 
 
@@ -18,7 +21,7 @@ Untuk menjalankan aplikasi ini, bisa dilakukan dengan menjalankan beberapa comma
 make
 ```
 
-2. lalu run binary codenya
+2. lalu run binary nya
 ```bash
 make run
 ```
