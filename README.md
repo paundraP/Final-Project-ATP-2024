@@ -7,7 +7,8 @@ Disusun oleh :
 | Nama | NRP |
 | ------ | ----- |
 | Paundra Pujo Darmawan | 5027241008 | 
-| Ahmad Idza Anafin | 5027241017 |
+| Ahmad Idza Anafin | 5027241017 | 
+| Putu Yudi Nandanjaya Wiraguna | 5027241080 |
 | Afriza Tristan Calendra Rajasa | 5027241104 |
 
 
@@ -20,7 +21,14 @@ Untuk menjalankan aplikasi ini, bisa dilakukan dengan menjalankan beberapa comma
 make
 ```
 
-2. lalu run binary codenya
+2. lalu run binary nya
 ```bash
-build/spotify
+make run
 ```
+
+## Directory / Layers
+- **include** : Direktori ini berisi pendeklarasian fungsi fungsi pembantu yang akan diterapkan di fungsi main. Direktori ini kita gunakan supaya kode bisa lebih mudah dipahami dan dipelajari, karena tidak dituliskan dalam satu file saja.
+
+- **src** : Direktori ini berisi penerapan logika dari fungsi fungsi tambahan yang sudah dideklarasikan pada direktori include. 
+
+- **main.c** : Entry point dari program spotify ini, penerapan fungsi fungsi pembantu yang sudah dideklarasikan pada direktori include.

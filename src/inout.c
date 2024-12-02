@@ -3,8 +3,8 @@
 #include "dto.h"
 #include "controller.h"
 
-void printSongInsidePlaylist(struct Playlist* head) {
-    struct Playlist* curr = head;
+void printSongInsidePlaylist(Playlist* head) {
+    Playlist* curr = head;
     int nameLength = strlen(head->playlistName);
     int padding = (159 - nameLength - 10) / 2;
 
@@ -12,7 +12,7 @@ void printSongInsidePlaylist(struct Playlist* head) {
     printf("%-50s %-50s %-50s %s\n", "Judul", "Penyanyi", "Album", "Waktu");
 
     while (curr != NULL) {
-        struct Song* song = curr->song; 
+        Song* song = curr->song; 
         while (song != NULL) {  
             printf("%-50s %-50s %-50s %.2f\n", song->title, song->singer, song->album, song->time);
             song = song->next; 
@@ -22,8 +22,8 @@ void printSongInsidePlaylist(struct Playlist* head) {
     printf("\n");
 }
 
-void printPlaylist(struct Playlist* head) {
-    struct Playlist* curr = head;
+void printPlaylist(Playlist* head) {
+    Playlist* curr = head;
     printf("Playlists you've created:\n");
     int i = 1;
     printf("%-3s %-50s\n", "No.", "Playlist Name");
@@ -106,6 +106,6 @@ void dashboardMenu(struct Playlist* head){
 
 }
 
-void playlistDetail(struct Playlist* head){
+void playlistDetail(Playlist* head){
     // nantinya buat ngesorting isi detail playlist jika user minta.
 }

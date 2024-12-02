@@ -3,9 +3,9 @@
 
 #include "dto.h"
 
-void printSongInsidePlaylist(struct Playlist* head);
-void printPlaylist(struct Playlist* head);
+void printSongInsidePlaylist(Playlist* head);
+void printPlaylist(Playlist* head);
 void dashboardMenu(struct Playlist* head);
-void playlistDetail(struct Playlist* head);
+void playlistDetail(Playlist* head);
 
 #endif 

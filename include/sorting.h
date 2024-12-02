@@ -3,9 +3,9 @@
 
 #include "dto.h"
 
-void sortByTitle(struct Playlist* playlists);
-void sortBySinger(struct Playlist* Playlists);
-void sortByAlbum(struct Playlist* playlists);
-void sortByMinute(struct Playlist* Playlists);
+void sortByTitle(Song* song);
+void sortBySinger(Song* song);
+void sortByAlbum(Song* song);
+void sortByMinute(Song* song);
 
 #endif

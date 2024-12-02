@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "dto.h"
 
-struct Playlist* createPlaylist(char name[]){
-    struct Playlist* new_playlist = (struct Playlist*)malloc(sizeof(struct Playlist));
+Playlist* createPlaylist(char name[]){
+    Playlist* new_playlist = (Playlist*)malloc(sizeof(Playlist));
     strcpy(new_playlist->playlistName, name);
     new_playlist->song = NULL;
     new_playlist->next = NULL;
@@ -11,8 +11,8 @@ struct Playlist* createPlaylist(char name[]){
     return new_playlist;
 }
 
-struct Song* createSong(char new_singer[], char new_title[], char new_album[], double new_time){
-    struct Song* new_song = (struct Song*)malloc(sizeof(struct Song));
+Song* createSong(char new_singer[], char new_title[], char new_album[], double new_time){
+    Song* new_song = (Song*)malloc(sizeof(Song));
     strcpy(new_song->title, new_title);
     strcpy(new_song->singer, new_singer);
     strcpy(new_song->album, new_album);
@@ -21,11 +21,11 @@ struct Song* createSong(char new_singer[], char new_title[], char new_album[], d
     return new_song;
 }
 
-void addSongtoPlaylist(struct Playlist* playlist, struct Song* song){
+void addSongtoPlaylist(Playlist* playlist, Song* song){
     if(playlist->song == NULL) {
         playlist->song = song;
     }else {
-        struct Song* current = playlist->song;
+        Song* current = playlist->song;
         while (current->next != NULL) {
             current = current->next;
         }
@@ -54,14 +54,14 @@ struct Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
     if(head == NULL){
         return new_playlist;
     }
-    struct Playlist* temp = head;
+    Playlist* temp = playlist;
     while(temp->next != NULL) {
         temp = temp->next;
     }
     temp->next = new_playlist;
-    return head;
+    return playlist;
 }
 
-struct Playlist* deleteSongFromPlaylist(struct Playlist* head, char songName[]){
+Playlist* deleteSongFromPlaylist(Playlist* playlist, char songName[]){
     //implementasi disini
 }
