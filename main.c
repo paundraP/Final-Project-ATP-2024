@@ -43,6 +43,7 @@ void playlistDetail(Playlist* head){
 
 void dashboardMenu(struct Playlist* head){
     char choice;
+    char playlistName[50];
 
     do {
         printf("\n--- Song App Menu ---\n");
@@ -57,7 +58,6 @@ void dashboardMenu(struct Playlist* head){
         getchar();
         switch (choice) {
             case 'a':
-                char playlistName[50];
                 printf("Enter playlist name: ");
                 fgets(playlistName, sizeof(playlistName), stdin); 
                 playlistName[strcspn(playlistName, "\n")] = '\0';
