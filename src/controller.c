@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "dto.h"
@@ -54,12 +55,12 @@ struct Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
     if(head == NULL){
         return new_playlist;
     }
-    Playlist* temp = playlist;
+    Playlist* temp = head;
     while(temp->next != NULL) {
         temp = temp->next;
     }
     temp->next = new_playlist;
-    return playlist;
+    return head;
 }
 
 Playlist* deleteSongFromPlaylist(Playlist* playlist, char songName[]){

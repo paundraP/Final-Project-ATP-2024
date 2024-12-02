@@ -21,7 +21,7 @@ int main() {
     // sortByMinute(songs);
     // sortByTitle(songs);
     // printSongInsidePlaylist(playlists);
-    free(songs);
+    // free(songs);
     free(playlists);
 
     return 0;

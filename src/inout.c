@@ -96,7 +96,7 @@ void dashboardMenu(struct Playlist* head){
                 break;
 
             case 'g':
-                return 0;
+                return;
                 break;
 
             default:

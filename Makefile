@@ -10,10 +10,10 @@ BUILD_DIR = build
 INCLUDE_DIR = include
 
 # Source Files
-SRCS = $(wildcard $(SRC_DIR)/*.c)
+SRCS = main.c $(wildcard $(SRC_DIR)/*.c)
 
 # Object Files
-OBJS = $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
 
 # Executable
 TARGET = $(BUILD_DIR)/spotify
@@ -26,9 +26,9 @@ $(TARGET): $(OBJS)
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(OBJS) -o $(TARGET)
 
-# Compilation Rule
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(BUILD_DIR)
+# Compilation Rule for Source Files
+$(BUILD_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean Rule
@@ -38,4 +38,4 @@ clean:
 # Phony Targets
 .PHONY: all clean
 run:
-	build/spotify
+	$(TARGET)
