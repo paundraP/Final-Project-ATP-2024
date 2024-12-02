@@ -11,7 +11,7 @@ Playlist* findPlaylistByIndex(Playlist* playlist, int index){
         count++;
     }
     if(curr == NULL){
-        printf("Index lebih dari batas akhir\n");
+        // printf("Playlis\n");
         return 0;
     }
     return curr;
@@ -44,7 +44,7 @@ void addSongtoPlaylist(Playlist* playlist, Song* song, int index){
         count++;
     }
     if(curr == NULL){
-        printf("Index lebih dari batas akhir\n");
+        printf("\nCan't add song, playlist not found\n");
         return;
     }
     if(curr->song == NULL) {
@@ -71,7 +71,7 @@ int playlistExists(struct Playlist* head, char playlistname[]) {
 
 Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
     if (playlistExists(head, playlistname)) {
-        printf("Playlist with the name '%s' already exists.\n", playlistname);
+        printf("\nPlaylist with the name '%s' already exists.\n\n", playlistname);
         return head;
     }
 
@@ -87,9 +87,9 @@ Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
     return head;
 }
 
-Playlist* deleteSongFromPlaylist(Playlist* playlist, char songName[]){
-    //implementasi disini
-}
+// Playlist* deleteSongFromPlaylist(Playlist* playlist, char songName[]){
+//     //implementasi disini
+// }
 
 void savePlaylist(Playlist* playlist, int index){
     Playlist* curr = findPlaylistByIndex(playlist, index);
@@ -100,7 +100,7 @@ void savePlaylist(Playlist* playlist, int index){
     fptr = fopen(filename, "w");
     Song* temp = curr->song;
     if(fptr == NULL){
-        printf("Error\n");
+        printf("Error\n\n");
         return;
     }
     else{

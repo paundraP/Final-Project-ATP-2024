@@ -25,6 +25,7 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(OBJS) -o $(TARGET)
+	@mkdir -p playlist
 
 # Compilation Rule for Source Files
 $(BUILD_DIR)/%.o: %.c
