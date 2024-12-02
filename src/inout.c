@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "dto.h"
+#include "controller.h"
 
 void printSongInsidePlaylist(struct Playlist* head) {
     struct Playlist* curr = head;
@@ -25,25 +26,84 @@ void printPlaylist(struct Playlist* head) {
     struct Playlist* curr = head;
     printf("Playlists you've created:\n");
     int i = 1;
-    printf("%-10s %-50s\n", "Number", "Playlist Name");
+    printf("%-3s %-50s\n", "No.", "Playlist Name");
     while (curr != NULL) {
-        printf("%-10d %-50s\n", i, curr->playlistName);
+        printf("%-3d %-50s\n", i, curr->playlistName);
         i++;
         curr = curr->next;
     }
     printf("\n");
 }
 
-void dashboardMenu(char* choice){
-    // menampilkan pilihan menu awal seperti: 
-    // melihat seluruh playlist
-    // membuat playlist
-    // menambahkan lagu kedalaman playlist
-    // melihat detail playlist (lagu didalamnya)
-    // menghapus lagu didalam playlist
-    // simpan playlist kedalam sebuah file
-    // membaca file yang berisi playlist dan menampilkan di program
-    // keluar program
+
+
+void dashboardMenu(struct Playlist* head){
+    char choice;
+
+    do {
+        printf("\n--- Song App Menu ---\n");
+        printf("What do you want to do?\n");
+        printf("a. Create playlist\n");
+        printf("b. Add song to Playlist\n");
+        printf("c. See playlist\n");
+        printf("d. Remove song from playlist\n");
+        printf("e. Save playlist to file\n");
+        printf("f. Insert your playlist from existing file\n");
+        printf("g. Exit program\n");
+        printf("Enter your choice: ");
+        scanf(" %c", &choice);
+        switch (choice) {
+            case 'a':
+		head = addNewPlaylist(head, "Pujo sedih");
+//		char playlistname[100];
+//		char str[100];  // Declare a character array to hold the string
+//                break;
+//		printf("Enter a string: ");
+//		fgets(str, sizeof(str), stdin); 
+  //              printf("playlist name %s\n",playlistname);
+                break;
+
+	    case 'b':
+                printf("a\n");
+                break;
+
+            case 'c':
+		printPlaylist(head);
+		printf("\npress n for back to menu...\n");
+		while (getchar() != 'n');
+		printf("\033[2J\033[H");
+                break;
+
+            case 'd':
+                printf("coming soon - beta version\n");
+		printf("\npress n for back to menu...\n");
+                while (getchar() != 'n');
+                printf("\033[2J\033[H");
+                break;
+
+            case 'e':
+                printf("coming soon - beta version\n");
+		printf("\npress n for back to menu...\n");
+                while (getchar() != 'n');
+                printf("\033[2J\033[H");
+                break;
+
+            case 'f':
+                printf("coming soon - beta version\n");
+		printf("\npress n for back to menu...\n");
+                while (getchar() != 'n');
+                printf("\033[2J\033[H");
+                break;
+
+            case 'g':
+                return 0;
+                break;
+
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    } while (choice != 'g');
+
 }
 
 void playlistDetail(struct Playlist* head){

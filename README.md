@@ -7,7 +7,9 @@ Disusun oleh :
 | Nama | NRP |
 | ------ | ----- |
 | Paundra Pujo Darmawan | 5027241008 | 
+| Ahmad Idza Anafin | 5027241017 |
 | Afriza Tristan Calendra Rajasa | 5027241104 |
+
 
 ## Run 
 

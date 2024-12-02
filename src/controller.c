@@ -33,7 +33,23 @@ void addSongtoPlaylist(struct Playlist* playlist, struct Song* song){
     }
 }
 
+int playlistExists(struct Playlist* head, char playlistname[]) {
+    struct Playlist* temp = head;
+    while (temp != NULL) {
+        if (strcmp(temp->playlistName, playlistname) == 0) {
+            return 1; 
+        }
+        temp = temp->next;
+    }
+    return 0;
+}
+
 struct Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
+    if (playlistExists(head, playlistname)) {
+        printf("Playlist with the name '%s' already exists.\n", playlistname);
+        return head;
+    }
+
     struct Playlist* new_playlist = createPlaylist(playlistname);
     if(head == NULL){
         return new_playlist;
