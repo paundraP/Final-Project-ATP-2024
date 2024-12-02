@@ -3,10 +3,10 @@
 
 #include "dto.h"
 
-struct Playlist* createPlaylist(char name[]);
-struct Song* createSong(char new_singer[], char new_title[], char new_album[], double new_time);
-void addSongtoPlaylist(struct Playlist* playlist, struct Song* song);
-struct Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]);
-struct Playlist* deleteSongFromPlaylist(struct Playlist* head, char playlistname[]);
+Playlist* createPlaylist(char name[]);
+Song* createSong(char new_singer[], char new_title[], char new_album[], double new_time);
+void addSongtoPlaylist(Playlist* playlist, Song* song);
+Playlist* addNewPlaylist(Playlist* head, char playlistname[]);
+Playlist* deleteSongFromPlaylist(Playlist* head, char playlistname[]);
 
 #endif

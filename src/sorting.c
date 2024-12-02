@@ -1,18 +1,17 @@
 #include <stdio.h>
 #include "dto.h"
 
-void sortByTitle(struct Playlist* playlists){
+void sortByTitle(Playlist* playlists){
 
 }
 
-void sortBySinger(struct Playlist* Playlists){
+void sortBySinger(Playlist* playlists){
 
 }
 
-void sortByAlbum(struct Playlist* playlists){
+void sortByAlbum(Playlist* playlists){
 
 }
 
-void sortByMinute(struct Playlist* Playlists){
-    
+void sortByMinute(Song* song){
 }
