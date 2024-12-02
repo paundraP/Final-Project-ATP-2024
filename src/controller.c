@@ -33,19 +33,23 @@ void addSongtoPlaylist(Playlist* playlist, Song* song){
     }
 }
 
-Playlist* addNewPlaylist(Playlist* head, char playlistname[]){
+Playlist* addNewPlaylist(Playlist* playlist, char playlistname[]){
     Playlist* new_playlist = createPlaylist(playlistname);
-    if(head == NULL){
+    if(playlist == NULL){
         return new_playlist;
     }
-    Playlist* temp = head;
+    Playlist* temp = playlist;
     while(temp->next != NULL) {
         temp = temp->next;
     }
     temp->next = new_playlist;
-    return head;
+    return playlist;
 }
 
-Playlist* deleteSongFromPlaylist(Playlist* head, char songName[]){
+Playlist* deleteSongFromPlaylist(Playlist* playlist, char songName[]){
     //implementasi disini
+}
+
+Playlist* deletePlaylist(Playlist* playlist){
+
 }
