@@ -98,7 +98,7 @@ void dashboardMenu(Playlist* head){
 
 int main() {
     struct Playlist* playlists = NULL;
-    dashboardMenu(playlists);
+    // dashboardMenu(playlists);
     // Song* songs = createSong("the 1975", "zimbabwe", "dont know", 5.45);
     // Song* songs1 = createSong("cas", "testing", "dont know", 6.32);
     // Playlist* playlists = createPlaylist("pujo ganteng");
