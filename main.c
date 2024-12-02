@@ -37,7 +37,9 @@ void printPlaylist(Playlist* head) {
     printf("\n");
 }
 
-
+void playlistDetail(Playlist* head){
+    // nantinya buat ngesorting isi detail playlist jika user minta.
+}
 
 void dashboardMenu(struct Playlist* head){
     char choice;
@@ -46,81 +48,70 @@ void dashboardMenu(struct Playlist* head){
         printf("\n--- Song App Menu ---\n");
         printf("What do you want to do?\n");
         printf("a. Create playlist\n");
-        printf("b. Add song to Playlist\n");
-        printf("c. See playlist\n");
-        printf("d. Remove song from playlist\n");
-        printf("e. Save playlist to file\n");
-        printf("f. Insert your playlist from existing file\n");
-        printf("g. Exit program\n");
+        printf("b. See playlist\n");
+        printf("c. Save playlist to file\n");
+        // printf("f. Insert your playlist from existing file\n");
+        printf("d. Exit program\n");
         printf("Enter your choice: ");
         scanf(" %c", &choice);
+        getchar();
         switch (choice) {
             case 'a':
-		head = addNewPlaylist(head, "Pujo sedih");
-//		char playlistname[100];
-//		char str[100];  // Declare a character array to hold the string
-//                break;
-//		printf("Enter a string: ");
-//		fgets(str, sizeof(str), stdin); 
-  //              printf("playlist name %s\n",playlistname);
+                char playlistName[50];
+                printf("Enter playlist name: ");
+                fgets(playlistName, sizeof(playlistName), stdin); 
+                playlistName[strcspn(playlistName, "\n")] = '\0';
+                // printf("%s",playlistName);
+		        head = addNewPlaylist(head, playlistName);
+                printf("Playlist created\n");
                 break;
 
-	    case 'b':
-                printf("a\n");
+            case 'b':
+                if (head == NULL) {
+                    printf("The playlists list is empty.\n");
+                } else {
+                    printPlaylist(head);
+                    printf("\npress n for back to menu...\n");
+                    while (getchar() != 'n');
+                    printf("\033[2J\033[H");                    
+                }
                 break;
 
             case 'c':
-		printPlaylist(head);
-		printf("\npress n for back to menu...\n");
-		while (getchar() != 'n');
-		printf("\033[2J\033[H");
+                printf("coming soon - beta version\n");
+                printf("\npress n for back to menu...\n");
+                while (getchar() != 'n');
+                printf("\033[2J\033[H");
                 break;
 
             case 'd':
-                printf("coming soon - beta version\n");
-		printf("\npress n for back to menu...\n");
-                while (getchar() != 'n');
-                printf("\033[2J\033[H");
-                break;
-
-            case 'e':
-                printf("coming soon - beta version\n");
-		printf("\npress n for back to menu...\n");
-                while (getchar() != 'n');
-                printf("\033[2J\033[H");
-                break;
-
-            case 'f':
-                printf("coming soon - beta version\n");
-		printf("\npress n for back to menu...\n");
-                while (getchar() != 'n');
-                printf("\033[2J\033[H");
-                break;
-
-            case 'g':
                 return;
                 break;
 
             default:
                 printf("Invalid choice. Please try again.\n");
         }
-    } while (choice != 'g');
+    } while (choice != 'd');
 
 }
 
+
 int main() {
-    Playlist* playlists = createPlaylist("pujo ganteng");
-    Song* songs = createSong("the 1975", "zimbabwe", "dont know", 5.45);
-    Song* songs1 = createSong("cas", "testing", "dont know", 6.32);
-    Song* songs2 = createSong("test", "test", "test", 5.4);
-    playlists = addNewPlaylist(playlists, "Pujo sedih");
-    addSongtoPlaylist(playlists, songs);
-    addSongtoPlaylist(playlists, songs1);
-    printPlaylist(playlists);
-    sortByTitle(songs);
-    printSongInsidePlaylist(playlists);
-    savePlaylist(playlists, 1);
-    free(songs);
+    struct Playlist* playlists = NULL;
+    dashboardMenu(playlists);
+    // Song* songs = createSong("the 1975", "zimbabwe", "dont know", 5.45);
+    // Song* songs1 = createSong("cas", "testing", "dont know", 6.32);
+    // Playlist* playlists = createPlaylist("pujo ganteng");
+    // addSongtoPlaylist(playlists, songs);
+    // addSongtoPlaylist(playlists, songs1);
+    // playlists = addNewPlaylist(playlists, "Pujo sedih");
+    // playlists = addNewPlaylist(playlists, "Pujo bahagia");
+    // printPlaylist(playlists);
+    // printSongInsidePlaylist(playlists);
+    // sortByMinute(songs);
+    // sortByTitle(songs);
+    // printSongInsidePlaylist(playlists);
+    // free(songs);
     free(playlists);
 
     return 0;
