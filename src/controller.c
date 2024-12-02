@@ -45,7 +45,7 @@ int playlistExists(struct Playlist* head, char playlistname[]) {
     return 0;
 }
 
-struct Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
+Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
     if (playlistExists(head, playlistname)) {
         printf("Playlist with the name '%s' already exists.\n", playlistname);
         return head;
@@ -65,4 +65,34 @@ struct Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
 
 Playlist* deleteSongFromPlaylist(Playlist* playlist, char songName[]){
     //implementasi disini
+}
+
+void savePlaylist(Playlist* playlist, int index){
+    Playlist* curr = playlist;
+    int count = 0;
+    while(curr != NULL && count < index - 1) {
+        curr = curr->next;
+        count++;
+    }
+    if(curr == NULL){
+        printf("Index lebih dari batas akhir\n");
+        return;
+    }
+    FILE *fptr;
+    char filename[50];
+    snprintf(filename, sizeof(filename), "playlist/%s.txt", curr->playlistName);
+
+    fptr = fopen(filename, "w");
+    Song* temp = curr->song;
+    if(fptr == NULL){
+        printf("Error\n");
+        return;
+    }
+    else{
+        while(temp != NULL){
+            fprintf(fptr, "Title: %s\nSinger: %s\nAlbum: %s\nTime: %.2f\n\n", temp->title, temp->singer, temp->album, temp->time);
+            temp = temp->next;
+        }
+    }
+    fclose(fptr);
 }

@@ -96,7 +96,6 @@ void dashboardMenu(struct Playlist* head){
 }
 
 
-
 int main() {
     struct Playlist* playlists = NULL;
     dashboardMenu(playlists);
