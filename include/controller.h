@@ -3,9 +3,10 @@
 
 #include "dto.h"
 
+Playlist* findPlaylistByIndex(Playlist* playlist, int index);
 Playlist* createPlaylist(char name[]);
 Song* createSong(char new_singer[], char new_title[], char new_album[], double new_time);
-void addSongtoPlaylist(Playlist* playlist, Song* song);
+void addSongtoPlaylist(Playlist* playlist, Song* song, int index);
 Playlist* addNewPlaylist(Playlist* playlist, char playlistname[]);
 int playlistExists(struct Playlist* head, char playlistname[]);
 Playlist* deleteSongFromPlaylist(Playlist* playlist, char playlistname[]);

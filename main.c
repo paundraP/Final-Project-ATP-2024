@@ -5,27 +5,24 @@
 #include "controller.h"
 #include "sorting.h"
 
-void printSongInsidePlaylist(Playlist* head) {
-    Playlist* curr = head;
-    int nameLength = strlen(head->playlistName);
+void printSongInsidePlaylist(Playlist* playlist, int index) {
+    Playlist* curr = findPlaylistByIndex(playlist, index);
+    int nameLength = strlen(playlist->playlistName);
     int padding = (159 - nameLength - 10) / 2;
 
-    printf("%.*s Playlist %s %.*s\n", padding, "=======================================================================================", head->playlistName, padding, "=======================================================================================");
+    printf("%.*s Playlist %s %.*s\n", padding, "=======================================================================================", playlist->playlistName, padding, "=======================================================================================");
     printf("%-50s %-50s %-50s %s\n", "Judul", "Penyanyi", "Album", "Waktu");
-
-    while (curr != NULL) {
         Song* song = curr->song; 
         while (song != NULL) {  
             printf("%-50s %-50s %-50s %.2f\n", song->title, song->singer, song->album, song->time);
             song = song->next; 
         }
         curr = curr->next; 
-    }
     printf("\n");
 }
 
-void printPlaylist(Playlist* head) {
-    Playlist* curr = head;
+void printPlaylist(Playlist* playlist) {
+    Playlist* curr = playlist;
     printf("Playlists you've created:\n");
     int i = 1;
     printf("%-3s %-50s\n", "No.", "Playlist Name");
@@ -37,11 +34,11 @@ void printPlaylist(Playlist* head) {
     printf("\n");
 }
 
-void playlistDetail(Playlist* head){
+void playlistDetail(Playlist* playlist){
     // nantinya buat ngesorting isi detail playlist jika user minta.
 }
 
-void dashboardMenu(Playlist* head){
+void dashboardMenu(Playlist* playlist){
     char choice;
     char playlistName[50];
 
@@ -62,15 +59,15 @@ void dashboardMenu(Playlist* head){
                 fgets(playlistName, sizeof(playlistName), stdin); 
                 playlistName[strcspn(playlistName, "\n")] = '\0';
                 // printf("%s",playlistName);
-		        head = addNewPlaylist(head, playlistName);
+		        playlist = addNewPlaylist(playlist, playlistName);
                 printf("Playlist created\n");
                 break;
 
             case 'b':
-                if (head == NULL) {
+                if (playlist == NULL) {
                     printf("The playlists list is empty.\n");
                 } else {
-                    printPlaylist(head);
+                    printPlaylist(playlist);
                     printf("\npress n for back to menu...\n");
                     while (getchar() != 'n');
                     printf("\033[2J\033[H");                    
@@ -97,21 +94,23 @@ void dashboardMenu(Playlist* head){
 
 
 int main() {
-    struct Playlist* playlists = NULL;
     // dashboardMenu(playlists);
-    // Song* songs = createSong("the 1975", "zimbabwe", "dont know", 5.45);
-    // Song* songs1 = createSong("cas", "testing", "dont know", 6.32);
-    // Playlist* playlists = createPlaylist("pujo ganteng");
-    // addSongtoPlaylist(playlists, songs);
-    // addSongtoPlaylist(playlists, songs1);
-    // playlists = addNewPlaylist(playlists, "Pujo sedih");
+    Playlist* playlists = createPlaylist("pujo ganteng");
+    Song* songs = createSong("the 1975", "zimbabwe", "dont know", 5.45);
+    addSongtoPlaylist(playlists, songs, 1);
+    Song* songs1 = createSong("cas", "testing", "dont know", 6.32);
+    playlists = addNewPlaylist(playlists, "Pujo sedih");
+    addSongtoPlaylist(playlists, songs1, 2);
+    // Song* songs2 = createSong("test", "test", "test", 4.32);
+    // addSongtoPlaylist(playlists, songs1, 1);
     // playlists = addNewPlaylist(playlists, "Pujo bahagia");
+    // addSongtoPlaylist(playlists, songs2, 2);
     // printPlaylist(playlists);
-    // printSongInsidePlaylist(playlists);
-    // sortByMinute(songs);
     // sortByTitle(songs);
-    // printSongInsidePlaylist(playlists);
-    // free(songs);
+    // printSongInsidePlaylist(playlists, 2);
+    // savePlaylist(playlists, 2);
+    // savePlaylist(playlists, 1);
+    free(songs);
     free(playlists);
 
     return 0;

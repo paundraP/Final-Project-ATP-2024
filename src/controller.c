@@ -3,6 +3,20 @@
 #include <stdlib.h>
 #include "dto.h"
 
+Playlist* findPlaylistByIndex(Playlist* playlist, int index){
+    Playlist* curr = playlist;
+    int count = 0;
+    while(curr != NULL && count < index - 1) {
+        curr = curr->next;
+        count++;
+    }
+    if(curr == NULL){
+        printf("Index lebih dari batas akhir\n");
+        return 0;
+    }
+    return curr;
+}
+
 Playlist* createPlaylist(char name[]){
     Playlist* new_playlist = (Playlist*)malloc(sizeof(Playlist));
     strcpy(new_playlist->playlistName, name);
@@ -22,11 +36,21 @@ Song* createSong(char new_singer[], char new_title[], char new_album[], double n
     return new_song;
 }
 
-void addSongtoPlaylist(Playlist* playlist, Song* song){
-    if(playlist->song == NULL) {
-        playlist->song = song;
+void addSongtoPlaylist(Playlist* playlist, Song* song, int index){
+    Playlist* curr = playlist;
+    int count = 0;
+    while(curr != NULL && count < index - 1) {
+        curr = curr->next;
+        count++;
+    }
+    if(curr == NULL){
+        printf("Index lebih dari batas akhir\n");
+        return;
+    }
+    if(curr->song == NULL) {
+        curr->song = song;
     }else {
-        Song* current = playlist->song;
+        Song* current = curr->song;
         while (current->next != NULL) {
             current = current->next;
         }
@@ -68,16 +92,7 @@ Playlist* deleteSongFromPlaylist(Playlist* playlist, char songName[]){
 }
 
 void savePlaylist(Playlist* playlist, int index){
-    Playlist* curr = playlist;
-    int count = 0;
-    while(curr != NULL && count < index - 1) {
-        curr = curr->next;
-        count++;
-    }
-    if(curr == NULL){
-        printf("Index lebih dari batas akhir\n");
-        return;
-    }
+    Playlist* curr = findPlaylistByIndex(playlist, index);
     FILE *fptr;
     char filename[50];
     snprintf(filename, sizeof(filename), "playlist/%s.txt", curr->playlistName);
