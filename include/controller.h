@@ -10,5 +10,6 @@ Playlist* addNewPlaylist(Playlist* playlist, char playlistname[]);
 int playlistExists(struct Playlist* head, char playlistname[]);
 Playlist* deleteSongFromPlaylist(Playlist* playlist, char playlistname[]);
 Playlist* deletePlaylist(Playlist* playlist);
+void savePlaylist(Playlist* playlist, int index);
 
 #endif
