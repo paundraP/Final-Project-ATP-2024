@@ -3,9 +3,9 @@
 
 #include "dto.h"
 
-void sortByTitle(Playlist* playlists);
-void sortBySinger(Playlist* playlists);
-void sortByAlbum(Playlist* playlists);
-void sortByMinute(Playlist* playlists);
+void sortByTitle(Song* song);
+void sortBySinger(Song* song);
+void sortByAlbum(Song* song);
+void sortByMinute(Song* song);
 
 #endif
