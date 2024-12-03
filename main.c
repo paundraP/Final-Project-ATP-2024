@@ -146,8 +146,8 @@ void dashboardMenu(Playlist* playlist){
         printf("a. Create playlist\n");
         printf("b. See playlist\n");
         printf("c. Save playlist to file\n");
-        // printf("f. Insert your playlist from existing file\n");
-        printf("d. Exit program\n");
+        printf("d. Insert your playlist from existing file\n");
+        printf("e. Exit program\n");
         printf("Enter your choice: ");
         scanf(" %c", &choice);
         getchar();
@@ -171,17 +171,24 @@ void dashboardMenu(Playlist* playlist){
                 break;
 
             case 'c':
-                printf("\033[2J\033[H");                    
-                printPlaylist(playlist);
-                printf("Which playlist you want to save? ");
-                scanf(" %d", &save);
-                savePlaylist(playlist, save);
-                printf("\npress n for back to menu...\n");
-                while (getchar() != 'n');
-                printf("\033[2J\033[H");
+                printf("\033[2J\033[H");   
+                if(playlist == NULL){
+                    printf("youre playlist is empty yet");
+                }else{
+                    printPlaylist(playlist);
+                    printf("Which playlist you want to save? ");
+                    scanf(" %d", &save);
+                    savePlaylist(playlist, save);
+                }
+                    printf("\npress n for back to menu...\n");
+                    while (getchar() != 'n');
+                    printf("\033[2J\033[H");
+                    break;                
+            case 'd':
+                printf("Coming soon - Beta version");
                 break;
 
-            case 'd':
+            case 'e':
                 free(playlist);
                 return;
                 // break;
@@ -189,7 +196,7 @@ void dashboardMenu(Playlist* playlist){
             default:
                 printf("\nInvalid choice. Please try again.\n");
         }
-    } while (choice != 'd');
+    } while (choice != 'e');
 
 }
 
