@@ -41,7 +41,7 @@ void printPlaylist(Playlist* playlist) {
 }
 
 void playlistMenu(Playlist* playlist) {
-    char choice;
+    char choice, extra;
     char title[50], singer[50], album[50], remove[50];
     float duration;
     int idx, idxtoremove;
@@ -77,17 +77,34 @@ void playlistMenu(Playlist* playlist) {
                 printf("Enter the singer of the song to add: ");
                 fgets(singer, sizeof(singer), stdin); 
                 singer[strcspn(singer, "\n")] = '\0';
+                if(singer[0] == '\0'){
+                    printf("the singer is required\n");
+                    break;
+                }
 
                 printf("Enter the title of the song to add: ");
                 fgets(title, sizeof(title), stdin); 
                 title[strcspn(title, "\n")] = '\0';
+                if(title[0] == '\0'){
+                    printf("the title is required\n");
+                    break;
+                }
 
                 printf("Enter the album of the song to add: ");
                 fgets(album, sizeof(album), stdin); 
                 album[strcspn(album, "\n")] = '\0';
+                if(album[0] == '\0'){
+                    printf("the album is required\n");
+                    break;
+                }
 
                 printf("Enter the duration of the song to add with format (0.00): ");
-                scanf("%f",&duration);
+                if (scanf("%f%c", &duration, &extra) == 2 && extra == '\n');
+                else {
+                    printf("Invalid input. must be a float.\n");
+                    while ((extra = getchar()) != '\n' && extra != EOF);
+                    break;
+                }
                 
                 addSongToPlaylist(playlist, idx, title, singer, album, duration);
                 sortByTitle(playlist);
