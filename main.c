@@ -24,7 +24,7 @@ void printSongInsidePlaylist(Playlist* playlist, int index) {
             printf("\nNo songs in this playlist\n");
         }
     }else{
-        printf("\nInvalid option\n");
+        printf("\nInvalid number, playlist not exists\n");
     }
 }
 
@@ -47,10 +47,12 @@ void playlistDetail(Playlist* playlist){
 
 void playlistMenu(Playlist* playlist) {
     char choice;
-    char songName[50];
+    char title[50], singer[50], album[50];
+    float duration;
+    int idx;
 
     do {
-        printf("\n--- Playlist Menu ---\n");
+        printf("\n--- Playlist Manager ---\n");
         printf("1. See songs in playlist\n");
         printf("2. Add a song to playlist\n");
         printf("3. Remove a song from playlist\n");
@@ -60,35 +62,38 @@ void playlistMenu(Playlist* playlist) {
         getchar();
 
         switch (choice) {
-            case '1':
-                // if (playlist->songs == NULL) {
-                    // printf("No songs in the playlist.\n");
-                // } else {
-                //     printSongs(playlist); // Assuming a function exists to print songs in the playlist
-                // }
-                printf("Choose playlist number:");
-                int idx;
+            case '1':                
+                printf("Choose playlist number: ");
                 scanf("%d",&idx);
                 printSongInsidePlaylist(playlist,idx);
                 break;
 
             case '2':
-                printf("Enter the name of the song to add: ");
-                // fgets(songName, sizeof(songName), stdin);
-                // songName[strcspn(songName, "\n")] = '\0';
-                // addSongToPlaylist(playlist, songName); // Assuming a function exists to add songs
-                printf("\nSong added to playlist.\n");
+                printf("Choose playlist number: ");
+                scanf("%d",&idx);
+                getchar();
+
+                printf("Enter the singer of the song to add: ");
+                fgets(singer, sizeof(singer), stdin); 
+                singer[strcspn(singer, "\n")] = '\0';
+
+                printf("Enter the title of the song to add: ");
+                fgets(title, sizeof(title), stdin); 
+                title[strcspn(title, "\n")] = '\0';
+
+                printf("Enter the album of the song to add: ");
+                fgets(album, sizeof(album), stdin); 
+                album[strcspn(album, "\n")] = '\0';
+
+                printf("Enter the duration of the song to add with format (0.00): ");
+                scanf("%f",&duration);
+                
+                addSongToPlaylist(playlist, idx, title, singer, album, duration);
                 break;
 
             case '3':
                 printf("Enter the name of the song to remove: ");
-                // fgets(songName, sizeof(songName), stdin);
-                // songName[strcspn(songName, "\n")] = '\0';
-                // if (removeSongFromPlaylist(playlist, songName)) { // Assuming a function exists to remove songs
-                //     printf("Song removed from playlist.\n");
-                // } else {
-                //     printf("Song not found in playlist.\n");
-                // }
+                
                 break;
 
             case '4':

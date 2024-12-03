@@ -3,6 +3,28 @@
 #include <stdlib.h>
 #include "dto.h"
 
+int isSongInPlaylist(struct Song* songList, char title[]) {
+    struct Song* temp = songList;
+    while (temp != NULL) {
+        if (strcmp(temp->title, title) == 0) {
+            return 1; 
+        }
+        temp = temp->next;
+    }
+    return 0; 
+}
+
+int playlistExists(struct Playlist* head, char playlistname[]) {
+    struct Playlist* temp = head;
+    while (temp != NULL) {
+        if (strcmp(temp->playlistName, playlistname) == 0) {
+            return 1; 
+        }
+        temp = temp->next;
+    }
+    return 0;
+}
+
 Playlist* findPlaylistByIndex(Playlist* playlist, int index){
     Playlist* curr = playlist;
     int count = 0;
@@ -36,38 +58,37 @@ Song* createSong(char new_singer[], char new_title[], char new_album[], double n
     return new_song;
 }
 
-void addSongtoPlaylist(Playlist* playlist, Song* song, int index){
-    Playlist* curr = playlist;
-    int count = 0;
-    while(curr != NULL && count < index - 1) {
-        curr = curr->next;
-        count++;
-    }
-    if(curr == NULL){
-        printf("\nCan't add song, playlist not found\n");
+
+void addSongToPlaylist(Playlist* playlist, int index, char title[], char singer[], char album[], double time) {
+    Playlist* targetPlaylist = findPlaylistByIndex(playlist, index);
+    if (targetPlaylist == NULL) {
+        printf("\nPlaylist not found.\n");
         return;
-    }
-    if(curr->song == NULL) {
-        curr->song = song;
-    }else {
-        Song* current = curr->song;
-        while (current->next != NULL) {
-            current = current->next;
+    }else{
+        if (isSongInPlaylist(targetPlaylist->song, title)) {
+            printf("\nSong '%s' already exists in the playlist '%s'.\n", title, targetPlaylist->playlistName);
+            return;
+        }else{
+            Song* newSong = createSong(singer, title, album, time);
+            if (!newSong) {
+                return;
+            }
+            if (!targetPlaylist->song) {
+                targetPlaylist->song = newSong;
+            } else {
+                Song* temp = targetPlaylist->song;
+                while (temp->next) {
+                    temp = temp->next;
+                }
+                temp->next = newSong; 
+            }
+            printf("\nSong '%s' added to playlist '%s'.\n", title, targetPlaylist->playlistName);
+            return;
         }
-        current->next = song;
+        
     }
 }
 
-int playlistExists(struct Playlist* head, char playlistname[]) {
-    struct Playlist* temp = head;
-    while (temp != NULL) {
-        if (strcmp(temp->playlistName, playlistname) == 0) {
-            return 1; 
-        }
-        temp = temp->next;
-    }
-    return 0;
-}
 
 Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
     if (playlistExists(head, playlistname)) {
