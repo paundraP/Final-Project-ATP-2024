@@ -38,18 +38,13 @@ void printPlaylist(Playlist* playlist) {
         i++;
         curr = curr->next;
     }
-    // printf("\n");
-}
-
-void playlistDetail(Playlist* playlist){
-    // nantinya buat ngesorting isi detail playlist jika user minta.
 }
 
 void playlistMenu(Playlist* playlist) {
     char choice;
-    char title[50], singer[50], album[50];
+    char title[50], singer[50], album[50], remove[50];
     float duration;
-    int idx;
+    int idx, idxtoremove;
 
     do {
         printf("\n--- Playlist Manager ---\n");
@@ -62,13 +57,19 @@ void playlistMenu(Playlist* playlist) {
         getchar();
 
         switch (choice) {
-            case '1':                
+            case '1':         
+                printf("\033[2J\033[H");
+                printPlaylist(playlist);
+                printf("see song inside playlist!\n");
                 printf("Choose playlist number: ");
                 scanf("%d",&idx);
                 printSongInsidePlaylist(playlist,idx);
                 break;
 
             case '2':
+                printf("\033[2J\033[H");
+                printPlaylist(playlist);
+                printf("add song to playlist!\n");
                 printf("Choose playlist number: ");
                 scanf("%d",&idx);
                 getchar();
@@ -89,11 +90,21 @@ void playlistMenu(Playlist* playlist) {
                 scanf("%f",&duration);
                 
                 addSongToPlaylist(playlist, idx, title, singer, album, duration);
+                sortByTitle(playlist);
                 break;
 
             case '3':
+                printf("\033[2J\033[H");
+                printPlaylist(playlist);
+                printf("enter the number of the playlist that contains the song you want to delete: ");
+                scanf(" %d",&idxtoremove);
+                getchar();
+                printSongInsidePlaylist(playlist,idxtoremove);
                 printf("Enter the name of the song to remove: ");
-                
+                fgets(remove, sizeof(remove), stdin); 
+                remove[strcspn(remove, "\n")] = '\0';
+                printf("%s\n", remove);
+                deleteSongFromPlaylist(playlist, idxtoremove, remove);
                 break;
 
             case '4':
@@ -109,6 +120,7 @@ void playlistMenu(Playlist* playlist) {
 
 void dashboardMenu(Playlist* playlist){
     char choice;
+    int save;
     char playlistName[50];
 
     do {
@@ -128,24 +140,25 @@ void dashboardMenu(Playlist* playlist){
                 fgets(playlistName, sizeof(playlistName), stdin); 
                 playlistName[strcspn(playlistName, "\n")] = '\0';
 		        playlist = addNewPlaylist(playlist, playlistName);
-                printf("\nPlaylist created\n\n");
                 break;
 
+
             case 'b':
-                // printPlaylist(playlist);
                 if (playlist == NULL) {
                     printf("\nThe playlists list is empty.\n");
                 } else {
+                    printf("\033[2J\033[H");                    
                     printPlaylist(playlist);
-                    // printSongInsidePlaylist(playlist,1);
                     playlistMenu(playlist);
-                    // while (getchar() != '4');
-                    // printf("\033[2J\033[H");                    
                 }
                 break;
 
             case 'c':
-                printf("\ncoming soon - beta version\n");
+                printf("\033[2J\033[H");                    
+                printPlaylist(playlist);
+                printf("Which playlist you want to save? ");
+                scanf(" %d", &save);
+                savePlaylist(playlist, save);
                 printf("\npress n for back to menu...\n");
                 while (getchar() != 'n');
                 printf("\033[2J\033[H");
@@ -167,23 +180,5 @@ void dashboardMenu(Playlist* playlist){
 int main() {
     Playlist* playlists = NULL;
     dashboardMenu(playlists);
-    // Playlist* playlists = createPlaylist("pujo ganteng");
-    // Song* songs = createSong("the 1975", "zimbabwe", "dont know", 5.45);
-    // addSongtoPlaylist(playlists, songs, 1);
-    // Song* songs1 = createSong("cas", "testing", "dont know", 6.32);
-    // playlists=addNewPlaylist(playlists, "Pujo sedih");
-    // addSongtoPlaylist(playlists, songs1, 2);
-    // Song* songs2 = createSong("test", "test", "test", 4.32);
-    // addSongtoPlaylist(playlists, songs1, 1);
-    // playlists = addNewPlaylist(playlists, "Pujo bahagia");
-    // addSongtoPlaylist(playlists, songs2, 2);
-    // printPlaylist(playlists);
-    // sortByTitle(songs);
-    // printSongInsidePlaylist(playlists, 1);
-    // savePlaylist(playlists, 2);
-    // savePlaylist(playlists, 1);
-    // free(songs);
-    free(playlists);
-
     return 0;
 }

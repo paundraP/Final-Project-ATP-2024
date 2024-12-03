@@ -14,8 +14,8 @@ int isSongInPlaylist(struct Song* songList, char title[]) {
     return 0; 
 }
 
-int playlistExists(struct Playlist* head, char playlistname[]) {
-    struct Playlist* temp = head;
+int playlistExists(struct Playlist* playlist, char playlistname[]) {
+    struct Playlist* temp = playlist;
     while (temp != NULL) {
         if (strcmp(temp->playlistName, playlistname) == 0) {
             return 1; 
@@ -33,8 +33,7 @@ Playlist* findPlaylistByIndex(Playlist* playlist, int index){
         count++;
     }
     if(curr == NULL){
-        // printf("Playlis\n");
-        return 0;
+        return NULL;
     }
     return curr;
 }
@@ -90,30 +89,63 @@ void addSongToPlaylist(Playlist* playlist, int index, char title[], char singer[
 }
 
 
-Playlist* addNewPlaylist(struct Playlist* head, char playlistname[]){
-    if (playlistExists(head, playlistname)) {
+Playlist* addNewPlaylist(struct Playlist* playlist, char playlistname[]){
+    if (playlistExists(playlist, playlistname)) {
+        printf("\033[2J\033[H");                    
         printf("\nPlaylist with the name '%s' already exists.\n\n", playlistname);
-        return head;
+        return playlist;
+    }else {
+        printf("\033[2J\033[H");                    
+        printf("\nplaylist %s created\n\n", playlistname);
     }
 
     struct Playlist* new_playlist = createPlaylist(playlistname);
-    if(head == NULL){
+    if(playlist == NULL){
         return new_playlist;
     }
-    Playlist* temp = head;
+    Playlist* temp = playlist;
     while(temp->next != NULL) {
         temp = temp->next;
     }
     temp->next = new_playlist;
-    return head;
+    return playlist;
 }
 
-// Playlist* deleteSongFromPlaylist(Playlist* playlist, char songName[]){
-//     //implementasi disini
-// }
+Playlist* deleteSongFromPlaylist(Playlist* playlist, int index, char songName[]) {
+    Playlist* temp = findPlaylistByIndex(playlist, index);
+    if (temp == NULL) {
+        printf("Index out of bound!\n");
+        return playlist;
+    }
+
+    Song* current = temp->song;
+    Song* previous = NULL;
+
+    while (current != NULL) {
+        if (strcmp(current->title, songName) == 0) {
+            if (previous == NULL) {
+                temp->song = current->next;
+            } else {
+                previous->next = current->next;
+            }
+            free(current);
+            printf("Song deleted successfully.\n");
+            return playlist;
+        }
+        previous = current;
+        current = current->next;
+    }
+
+    printf("The song you want to delete is not known, or you're mistyping.\n");
+    return playlist;
+}
 
 void savePlaylist(Playlist* playlist, int index){
     Playlist* curr = findPlaylistByIndex(playlist, index);
+    if(curr == NULL) {
+        printf("The playlist you want to save is unknow, or youre mistyping\n");
+        return;
+    }
     FILE *fptr;
     char filename[50];
     snprintf(filename, sizeof(filename), "playlist/%s.txt", curr->playlistName);
@@ -121,7 +153,7 @@ void savePlaylist(Playlist* playlist, int index){
     fptr = fopen(filename, "w");
     Song* temp = curr->song;
     if(fptr == NULL){
-        printf("Error\n\n");
+        printf("Error saving file\n\n");
         return;
     }
     else{

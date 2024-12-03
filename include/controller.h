@@ -8,9 +8,9 @@ Playlist* createPlaylist(char name[]);
 Song* createSong(char new_singer[], char new_title[], char new_album[], double new_time);
 void addSongToPlaylist(Playlist* playlist, int index, const char* title, const char* singer, const char* album, double time);
 Playlist* addNewPlaylist(Playlist* playlist, char playlistname[]);
-int playlistExists(struct Playlist* head, char playlistname[]);
+int playlistExists(struct Playlist* playlist, char playlistname[]);
 int isSongInPlaylist(Song* songList, const char* title);
-Playlist* deleteSongFromPlaylist(Playlist* playlist, char playlistname[]);
+Playlist* deleteSongFromPlaylist(Playlist* playlist, int index, char songName[]);
 Playlist* deletePlaylist(Playlist* playlist);
 void savePlaylist(Playlist* playlist, int index);
 

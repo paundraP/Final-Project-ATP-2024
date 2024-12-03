@@ -6,7 +6,8 @@
 // BUT ITS SLOW FOR LARGE DATA TO SORTING THEM
 
 
-void sortByTitle(Song* song){
+void sortByTitle(Playlist* playlist){
+    Song* song = playlist->song;
     if (song == NULL) return;
 
     int swapped;
@@ -19,124 +20,6 @@ void sortByTitle(Song* song){
         while (ptr1->next != lptr) {
             if (strcmp(ptr1->title, ptr1->next->title) > 0) { 
                 // Swap the contents of the nodes
-                char tempTitle[100], tempSinger[100], tempAlbum[100];
-                double tempTime;
-
-                strcpy(tempTitle, ptr1->title);
-                strcpy(tempSinger, ptr1->singer);
-                strcpy(tempAlbum, ptr1->album);
-                tempTime = ptr1->time;
-
-                strcpy(ptr1->title, ptr1->next->title);
-                strcpy(ptr1->singer, ptr1->next->singer);
-                strcpy(ptr1->album, ptr1->next->album);
-                ptr1->time = ptr1->next->time;
-
-                strcpy(ptr1->next->title, tempTitle);
-                strcpy(ptr1->next->singer, tempSinger);
-                strcpy(ptr1->next->album, tempAlbum);
-                ptr1->next->time = tempTime;
-
-                swapped = 1;
-            }
-            ptr1 = ptr1->next;
-        }
-        lptr = ptr1;
-    } while (swapped);
-}
-
-void sortBySinger(Song* song){
-    if (song == NULL) return;
-
-    int swapped;
-    Song *ptr1, *lptr = NULL;
-
-    do {
-        swapped = 0;
-        ptr1 = song;
-
-        while (ptr1->next != lptr) {
-            if (strcmp(ptr1->singer, ptr1->next->singer) > 0) { 
-                // Swap the contents of the nodes
-                char tempTitle[100], tempSinger[100], tempAlbum[100];
-                double tempTime;
-
-                strcpy(tempTitle, ptr1->title);
-                strcpy(tempSinger, ptr1->singer);
-                strcpy(tempAlbum, ptr1->album);
-                tempTime = ptr1->time;
-
-                strcpy(ptr1->title, ptr1->next->title);
-                strcpy(ptr1->singer, ptr1->next->singer);
-                strcpy(ptr1->album, ptr1->next->album);
-                ptr1->time = ptr1->next->time;
-
-                strcpy(ptr1->next->title, tempTitle);
-                strcpy(ptr1->next->singer, tempSinger);
-                strcpy(ptr1->next->album, tempAlbum);
-                ptr1->next->time = tempTime;
-
-                swapped = 1;
-            }
-            ptr1 = ptr1->next;
-        }
-        lptr = ptr1;
-    } while (swapped);
-}
-
-void sortByAlbum(Song* song){
-    if (song == NULL) return;
-
-    int swapped;
-    Song *ptr1, *lptr = NULL;
-
-    do {
-        swapped = 0;
-        ptr1 = song;
-
-        while (ptr1->next != lptr) {
-            if (strcmp(ptr1->album, ptr1->next->album) > 0) { 
-                // Swap the contents of the nodes
-                char tempTitle[100], tempSinger[100], tempAlbum[100];
-                double tempTime;
-
-                strcpy(tempTitle, ptr1->title);
-                strcpy(tempSinger, ptr1->singer);
-                strcpy(tempAlbum, ptr1->album);
-                tempTime = ptr1->time;
-
-                strcpy(ptr1->title, ptr1->next->title);
-                strcpy(ptr1->singer, ptr1->next->singer);
-                strcpy(ptr1->album, ptr1->next->album);
-                ptr1->time = ptr1->next->time;
-
-                strcpy(ptr1->next->title, tempTitle);
-                strcpy(ptr1->next->singer, tempSinger);
-                strcpy(ptr1->next->album, tempAlbum);
-                ptr1->next->time = tempTime;
-
-                swapped = 1;
-            }
-            ptr1 = ptr1->next;
-        }
-        lptr = ptr1;
-    } while (swapped);
-}
-
-// use buble sort, not fast but easier to implement.
-void sortByMinute(Song* song){
-    if (song == NULL) return;
-
-    int swapped;
-    Song *ptr1, *lptr = NULL;
-
-    do {
-        swapped = 0;
-        ptr1 = song;
-
-        while (ptr1->next != lptr) {
-            if (ptr1->time > ptr1->next->time) {
-                // Swap the contents of the nodes (not the nodes themselves)
                 char tempTitle[100], tempSinger[100], tempAlbum[100];
                 double tempTime;
 
