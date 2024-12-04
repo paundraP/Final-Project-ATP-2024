@@ -146,6 +146,10 @@ void savePlaylist(Playlist* playlist, int index){
         printf("The playlist you want to save is unknow, or youre mistyping\n");
         return;
     }
+    if (curr->song == NULL){
+        printf("The playlist you want to save is empty yet\n");
+        return;
+    }
     FILE *fptr;
     char filename[50];
     snprintf(filename, sizeof(filename), "playlist/%s.txt", curr->playlistName);

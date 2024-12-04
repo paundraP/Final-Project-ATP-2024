@@ -5,6 +5,9 @@
 #include "controller.h"
 #include "sorting.h"
 
+
+#define MAX_LEN 128
+
 void printSongInsidePlaylist(Playlist* playlist, int index) {
     Playlist* curr = findPlaylistByIndex(playlist, index);
     if(curr != NULL){
@@ -126,7 +129,6 @@ void playlistMenu(Playlist* playlist) {
                 printf("Enter the name of the song to remove: ");
                 fgets(remove, sizeof(remove), stdin); 
                 remove[strcspn(remove, "\n")] = '\0';
-                printf("%s\n", remove);
                 deleteSongFromPlaylist(playlist, idxtoremove, remove);
                 break;
 
@@ -140,6 +142,12 @@ void playlistMenu(Playlist* playlist) {
         }
     } while (choice != '4');
     
+}
+void header(FILE *fptr){
+    char read_string[MAX_LEN];
+ 
+    while(fgets(read_string,sizeof(read_string),fptr) != NULL)
+        printf("%s",read_string);
 }
 
 void dashboardMenu(Playlist* playlist){
