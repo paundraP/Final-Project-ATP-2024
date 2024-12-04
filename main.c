@@ -5,6 +5,9 @@
 #include "controller.h"
 #include "sorting.h"
 
+
+#define MAX_LEN 128
+
 void printSongInsidePlaylist(Playlist* playlist, int index) {
     Playlist* curr = findPlaylistByIndex(playlist, index);
     if(curr != NULL){
@@ -122,7 +125,6 @@ void playlistMenu(Playlist* playlist) {
                 printf("Enter the name of the song to remove: ");
                 fgets(remove, sizeof(remove), stdin); 
                 remove[strcspn(remove, "\n")] = '\0';
-                printf("%s\n", remove);
                 deleteSongFromPlaylist(playlist, idxtoremove, remove);
                 break;
 
@@ -135,6 +137,12 @@ void playlistMenu(Playlist* playlist) {
         }
     } while (choice != '4');
     
+}
+void header(FILE *fptr){
+    char read_string[MAX_LEN];
+ 
+    while(fgets(read_string,sizeof(read_string),fptr) != NULL)
+        printf("%s",read_string);
 }
 
 void dashboardMenu(Playlist* playlist){
@@ -168,7 +176,7 @@ void dashboardMenu(Playlist* playlist){
                 if (playlist == NULL) {
                     printf("\nThe playlists list is empty.\n");
                 } else {
-                    printf("\033[2J\033[H");                    
+                    printf("\033[2J\033[H");    
                     printPlaylist(playlist);
                     playlistMenu(playlist);
                 }
@@ -176,18 +184,12 @@ void dashboardMenu(Playlist* playlist){
 
             case 'c':
                 printf("\033[2J\033[H");   
-                if(playlist == NULL){
-                    printf("youre playlist is empty yet");
-                }else{
-                    printPlaylist(playlist);
-                    printf("Which playlist you want to save? ");
-                    scanf(" %d", &save);
-                    savePlaylist(playlist, save);
-                }
-                    printf("\npress n for back to menu...\n");
-                    while (getchar() != 'n');
-                    printf("\033[2J\033[H");
-                    break;                
+                printPlaylist(playlist);
+                printf("Which playlist you want to save? ");
+                scanf(" %d", &save);
+                printf("\033[2J\033[H");
+                savePlaylist(playlist, save);
+                break;                
             case 'd':
                 printf("Coming soon - Beta version");
                 break;
