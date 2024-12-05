@@ -59,7 +59,7 @@ void printPlaylist(Playlist* playlist) {
     Playlist* temp = playlist;
     int index = 1;
     if (temp == NULL) {
-        printf("No playlists available.\n");
+        printf("\nNo playlists available.\n\n");
         return;
     }
     printf("\nNo.   Playlist Name\n");
@@ -83,8 +83,7 @@ Playlist* playlistMenu(Playlist* playlist) {
         printf("a. See songs in playlist\n");
         printf("b. Add a song to playlist\n");
         printf("c. Remove a song from playlist\n");
-        printf("d. Delete playlist\n");
-        printf("e. Back to main menu\n");
+        printf("d. Back to main menu\n");
         printf("Enter your choice: ");
         scanf(" %c", &choice);
         getchar();
@@ -144,7 +143,8 @@ Playlist* playlistMenu(Playlist* playlist) {
                 addSongToPlaylist(playlist, idx, title, singer, album, duration);
                 sortByTitle(playlist);
                 break;
-
+            
+            
             case 'c':
                 printf("\033[2J\033[H");
                 SpotifyText();
@@ -162,16 +162,8 @@ Playlist* playlistMenu(Playlist* playlist) {
                     printf("\nplaylist not found\n");
                 }
                 break;
-            
+
             case 'd':
-                printf("\033[2J\033[H");
-                SpotifyText();
-                printPlaylist(playlist);
-                printf("enter the number of the playlist you want to delete: ");
-                scanf(" %d", &idxtoremove);
-                playlist = deletePlaylist(playlist, idxtoremove); 
-                break;
-            case 'e':
                 printf("\033[2J\033[H");       
                 SpotifyText();             
                 break;
@@ -179,13 +171,13 @@ Playlist* playlistMenu(Playlist* playlist) {
             default:
                 printf("\nInvalid choice. Please try again.\n\n");
         }
-    } while (choice != 'e');
+    } while (choice != 'd');
     return playlist;
 }
 
 Playlist* dashboardMenu(Playlist* playlist){
     char choice;
-    int save;
+    int save, idxtoremove;
     char playlistName[50];
 
     do {
@@ -196,9 +188,10 @@ Playlist* dashboardMenu(Playlist* playlist){
         printf("What do you want to do? 😊\n");
         printf("a. Create playlist\n");
         printf("b. See playlist\n");
-        printf("c. Save playlist to file\n");
-        printf("d. Insert your playlist from existing file\n");
-        printf("e. Exit program\n");
+        printf("c. Delete playlist\n");
+        printf("d. Save playlist to file\n");
+        printf("e. Insert your playlist from existing file\n");
+        printf("f. Exit program\n");
         printf("Enter your choice: ");
         scanf(" %c", &choice);
         getchar();
@@ -226,6 +219,17 @@ Playlist* dashboardMenu(Playlist* playlist){
                 break;
 
             case 'c':
+                printf("\033[2J\033[H");
+                SpotifyText();
+                printPlaylist(playlist);
+                if(playlist!=NULL){
+                    printf("enter the number of the playlist you want to delete: ");
+                    scanf(" %d", &idxtoremove);
+                    playlist = deletePlaylist(playlist, idxtoremove);
+                }
+                break;
+
+            case 'd':
                 printf("\033[2J\033[H");   
                 SpotifyText();
                 if(playlist == NULL){
@@ -241,7 +245,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                     savePlaylist(playlist, save);
                 }
                 break;                
-            case 'd':
+            case 'e':
                 listFileInPlaylistFolder();
                 printf("Enter playlist name: ");
                 fgets(playlistName, sizeof(playlistName), stdin); 
@@ -252,14 +256,13 @@ Playlist* dashboardMenu(Playlist* playlist){
                 playlist = readPlaylist(playlist,playlistName);
                 break;
 
-            case 'e':
+            case 'f':
                 return playlist;
-                // break;
 
             default:
                 printf("\nInvalid choice. Please try again.\n");
         }
-    } while (choice != 'e');
+    } while (choice != 'f');
     return playlist;
 }
 
