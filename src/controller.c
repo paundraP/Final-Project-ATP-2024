@@ -141,29 +141,34 @@ Playlist* deleteSongFromPlaylist(Playlist* playlist, int index, char songName[])
 }
 
 Playlist* deletePlaylist(Playlist* playlist, int index) {
-    if(playlist == NULL){
-        printf("Playlist is still empty, nothing can be deleted\n");
-        return NULL;
+    if (playlist == NULL) {
+        printf("There is no playlist yet\n");
+        return playlist;
     }
+
     Playlist* temp = playlist;
-    if(temp->next == NULL){
-        free(temp);
-        printf("Successfully delete the playlist\n");
+
+    if (index == 1) {
+        playlist = temp->next; 
+        free(temp);            
+        printf("Successfully deleted the playlist\n");
         return playlist;
     }
-    int count = 0;
-    while (temp->next != NULL && count < index){
+
+    Playlist* prev = NULL;
+    for (int i = 1; temp != NULL && i < index; i++) {
+        prev = temp;
         temp = temp->next;
-        count++;
     }
-    Playlist* deleted = temp->next;
-    if(temp->next == NULL){
-        free(deleted);
+
+    if (temp == NULL) {
+        printf("Error: Invalid index\n");
         return playlist;
     }
-    temp->next = deleted->next;
-    free(deleted);
-    printf("Successfully delete the playlist\n");
+    prev->next = temp->next; 
+    free(temp);             
+    printf("Successfully deleted the playlist\n");
+
     return playlist;
 }
 
