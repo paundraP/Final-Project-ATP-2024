@@ -2,7 +2,32 @@
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <ctype.h>
 #include "dto.h"
+
+char* strip(char* str) {
+    char* start = str;
+    while (isspace((unsigned char)*start)) {
+        start++;
+    }
+
+    if (*start == '\0') {
+        str[0] = '\0';
+        return str;
+    }
+
+    char* end = start + strlen(start) - 1;
+    while (end > start && isspace((unsigned char)*end)) {
+        end--;
+    }
+
+    *(end + 1) = '\0';
+
+    if (start != str) {
+        memmove(str, start, end - start + 2);
+    }
+    return str;
+}
 
 int isSongInPlaylist(struct Song* songList, char title[]) {
     struct Song* temp = songList;

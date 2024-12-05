@@ -139,7 +139,9 @@ Playlist* playlistMenu(Playlist* playlist) {
                     while ((extra = getchar()) != '\n' && extra != EOF);
                     break;
                 }
-                
+                strip(title);
+                strip(singer);
+                strip(album);
                 addSongToPlaylist(playlist, idx, title, singer, album, duration);
                 sortByTitle(playlist);
                 break;
@@ -157,6 +159,7 @@ Playlist* playlistMenu(Playlist* playlist) {
                     printf("Enter the name of the song to remove: ");
                     fgets(remove, sizeof(remove), stdin); 
                     remove[strcspn(remove, "\n")] = '\0';
+                    strip(remove);
                     deleteSongFromPlaylist(playlist, idxtoremove, remove);
                 }else{
                     printf("\nplaylist not found\n");
@@ -202,6 +205,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                 playlistName[strcspn(playlistName, "\n")] = '\0';
                 printf("\033[2J\033[H");
                 SpotifyText();
+                strip(playlistName);
 		        playlist = addNewPlaylist(playlist, playlistName);  
 
                 break;
@@ -250,9 +254,9 @@ Playlist* dashboardMenu(Playlist* playlist){
                 printf("Enter playlist name: ");
                 fgets(playlistName, sizeof(playlistName), stdin); 
                 playlistName[strcspn(playlistName, "\n")] = '\0';
-                // printf("Coming soon - Beta version");
                 printf("\033[2J\033[H");
                 SpotifyText();
+                strip(playlistName);
                 playlist = readPlaylist(playlist,playlistName);
                 break;
 
@@ -268,10 +272,6 @@ Playlist* dashboardMenu(Playlist* playlist){
 
 int main(){
     Playlist* playlists = NULL;
-    // listFileInPlaylistFolder();
-    // 
-    // printPlaylist(playlists);
-    // printSongInsidePlaylist(playlists,1);
     SpotifyText();
     playlists = dashboardMenu(playlists);
     free(playlists);
