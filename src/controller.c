@@ -26,6 +26,18 @@ int playlistExists(struct Playlist* playlist, char playlistname[]) {
     return 0;
 }
 
+Playlist* findPlaylistByName(Playlist* head, char playlistName[]) {
+    Playlist* current = head;
+    while (current != NULL) {
+        if (strcmp(current->playlistName, playlistName) == 0) {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
+}
+
+
 Playlist* findPlaylistByIndex(Playlist* playlist, int index){
     Playlist* curr = playlist;
     int count = 0;
@@ -157,7 +169,7 @@ Playlist* deletePlaylist(Playlist* playlist, int index) {
 
     if (index == 1) {
         playlist = deleteHeadPlaylist(playlist);
-        printf("Head deleted\n");
+        printf("\nSuccessfully deleted the playlist\n");
         return playlist;
     }
 
@@ -168,12 +180,12 @@ Playlist* deletePlaylist(Playlist* playlist, int index) {
     }
 
     if (temp == NULL) {
-        printf("Error: Invalid index\n");
+        printf("\nError: Invalid index\n");
         return playlist;
     }
     prev->next = temp->next; 
     free(temp);             
-    printf("Successfully deleted the playlist\n");
+    printf("\nSuccessfully deleted the playlist\n");
 
     return playlist;
 }
@@ -181,12 +193,12 @@ Playlist* deletePlaylist(Playlist* playlist, int index) {
 void savePlaylist(Playlist* playlist, int index){
     Playlist* curr = findPlaylistByIndex(playlist, index);
     if(curr == NULL) {
-        printf("The playlist you want to save is unknow, or youre mistyping\n");
+        printf("\nThe playlist you want to save is unknow, or youre mistyping\n");
         return;
     }
     
     if (curr->song == NULL){
-        printf("The playlist you want to save is empty yet\n");
+        printf("\nThe playlist you want to save is empty yet\n");
         return;
     }
     FILE *fptr;
@@ -197,7 +209,7 @@ void savePlaylist(Playlist* playlist, int index){
     fprintf(fptr, "title, singer, album, duration\n");
     Song* temp = curr->song;
     if(fptr == NULL){
-        printf("Error saving file\n\n");
+        printf("\nError saving file\n\n");
         return;
     }
     else{
@@ -207,6 +219,8 @@ void savePlaylist(Playlist* playlist, int index){
         }
     }
     fclose(fptr);
+    printf("\nThe playlist %s save to playlist/%s.txt\n",curr->playlistName,curr->playlistName);
+
 }
 
 void listFileInPlaylistFolder(){
@@ -218,7 +232,7 @@ void listFileInPlaylistFolder(){
         return;
 
     }
-    int idx = 1;
+    
     printf("\nPlaylist files that you can open : \n");
     while ((entry = readdir(dir)) != NULL) {
         if (strlen(entry->d_name) > 2) { 
@@ -228,8 +242,8 @@ void listFileInPlaylistFolder(){
                 char nameWithoutExtension[256];        
                 strncpy(nameWithoutExtension, entry->d_name, nameLength);
                 nameWithoutExtension[nameLength] = '\0'; 
-                printf("%d. %s\n", idx, nameWithoutExtension);
-                idx++;
+                printf("- %s\n", nameWithoutExtension);
+                
             }
         }
     }
@@ -254,6 +268,7 @@ Playlist* readPlaylist(struct Playlist* playlist, char playlistName[]) {
     }
     
     playlist = addNewPlaylist(playlist,playlistName);
+    playlist = findPlaylistByName(playlist, playlistName);
     int idx=1;
 
     if (fgets(readData, sizeof(readData), fptr)) {

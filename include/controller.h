@@ -14,5 +14,6 @@ Playlist* deleteSongFromPlaylist(Playlist* playlist, int index, char songName[])
 Playlist* deletePlaylist(Playlist* playlist, int index);
 void savePlaylist(Playlist* playlist, int index);
 void listFileInPlaylistFolder();
+Playlist* findPlaylistByName(Playlist* head, char playlistName[]);
 Playlist* readPlaylist(struct Playlist* playlist, char playlistName[]);
 #endif
