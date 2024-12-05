@@ -94,8 +94,7 @@ Playlist* addNewPlaylist(struct Playlist* playlist, char playlistname[]){
         printf("\033[2J\033[H");                    
         printf("\nPlaylist with the name '%s' already exists.\n\n", playlistname);
         return playlist;
-    }else {
-        printf("\033[2J\033[H");                    
+    }else {                            
         printf("\nplaylist %s created\n\n", playlistname);
     }
 
@@ -186,6 +185,7 @@ void savePlaylist(Playlist* playlist, int index){
         printf("The playlist you want to save is unknow, or youre mistyping\n");
         return;
     }
+    
     if (curr->song == NULL){
         printf("The playlist you want to save is empty yet\n");
         return;
@@ -195,6 +195,7 @@ void savePlaylist(Playlist* playlist, int index){
     snprintf(filename, sizeof(filename), "playlist/%s.txt", curr->playlistName);
 
     fptr = fopen(filename, "w");
+    fprintf(fptr, "title, singer, album, duration\n");
     Song* temp = curr->song;
     if(fptr == NULL){
         printf("Error saving file\n\n");
@@ -202,7 +203,7 @@ void savePlaylist(Playlist* playlist, int index){
     }
     else{
         while(temp != NULL){
-            fprintf(fptr, "Title: %s\nSinger: %s\nAlbum: %s\nTime: %.2f\n\n", temp->title, temp->singer, temp->album, temp->time);
+            fprintf(fptr, "%s, %s, %s, %.2f\n", temp->title, temp->singer, temp->album, temp->time);
             temp = temp->next;
         }
     }
@@ -214,48 +215,64 @@ void listFileInPlaylistFolder(){
     struct dirent *entry;
     dir = opendir("playlist");
     if (dir == NULL) {
-        perror("opendir failed");
+        perror("\nopendir failed");
         return;
 
     }
     int idx = 1;
-    printf("Playlist files that you can open : \n");
+    printf("\nPlaylist files that you can open : \n");
     while ((entry = readdir(dir)) != NULL) {
-        if(strlen(entry->d_name) > 2){
-            printf("%d %s\n", idx, entry->d_name); 
-            idx++;
+        if (strlen(entry->d_name) > 2) { 
+            char *dot = strrchr(entry->d_name, '.'); 
+            if (dot && strcmp(dot, ".txt") == 0) {   
+                size_t nameLength = dot - entry->d_name; 
+                char nameWithoutExtension[256];        
+                strncpy(nameWithoutExtension, entry->d_name, nameLength);
+                nameWithoutExtension[nameLength] = '\0'; 
+                printf("%d. %s\n", idx, nameWithoutExtension);
+                idx++;
+            }
         }
     }
     closedir(dir);
 }
 
-void readPlaylist() {
+Playlist* readPlaylist(struct Playlist* playlist, char playlistName[]) {
+    char title[50], singer[50], album[50];
+    float duration;
     FILE *fptr;
     char readData[1024];
-    Song* song = NULL; 
+    
+    char filePath[50];
 
-    fptr = fopen("playlist/pujo.txt", "r");
+
+    sprintf(filePath, "playlist/%s.txt",  playlistName);
+    fptr = fopen(filePath, "r");
+
     if (fptr == NULL) {
-        printf("Error: Unable to open file\n");
-        return;
+        printf("\nError: Unable to open file\n");
+        return 0;
+    }
+    
+    playlist = addNewPlaylist(playlist,playlistName);
+    int idx=1;
+
+    if (fgets(readData, sizeof(readData), fptr)) {
+        ;
     }
 
-    while (fgets(readData, 1024, fptr) != NULL) {
-        if (strncmp(readData, "Title: ", 7) == 0) {
-            sscanf(readData, "Title: %99[^\n]", song->title);
-        } else if (strncmp(readData, "Singer: ", 8) == 0) {
-            sscanf(readData, "Singer: %99[^\n]", song->singer);
-        } else if (strncmp(readData, "Album: ", 7) == 0) {
-            sscanf(readData, "Album: %99[^\n]", song->album);
-        } else if (strncmp(readData, "Time: ", 6) == 0) {
-            sscanf(readData, "Time: %lf", &song->time);
+    while (fgets(readData, sizeof(readData), fptr)) {
+        readData[strcspn(readData, "\n")] = '\0';
+
+        if (sscanf(readData, "%[^,],%[^,],%[^,],%f", title, singer, album, &duration) == 4) {
+            addSongToPlaylist(playlist, idx, title, singer, album, duration);
+        }else{
+            printf("skipping data in line %d error to parse",idx);
         }
     }
+    
     fclose(fptr);
+    idx++;
 
-    printf("Data successfully read from playlist:\n");
-    printf("%s\n", song->title);
-    printf("%s\n", song->singer);
-    printf("%s\n", song->album);
-    printf("%.2f\n", song->time);
+    return playlist;
 }
