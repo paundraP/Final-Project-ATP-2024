@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <dirent.h>
 #include "dto.h"
 
 int isSongInPlaylist(struct Song* songList, char title[]) {
@@ -84,7 +85,6 @@ void addSongToPlaylist(Playlist* playlist, int index, char title[], char singer[
             printf("\nSong '%s' added to playlist '%s'.\n", title, targetPlaylist->playlistName);
             return;
         }
-        
     }
 }
 
@@ -140,6 +140,33 @@ Playlist* deleteSongFromPlaylist(Playlist* playlist, int index, char songName[])
     return playlist;
 }
 
+Playlist* deletePlaylist(Playlist* playlist, int index) {
+    if(playlist == NULL){
+        printf("Playlist is still empty, nothing can be deleted\n");
+        return NULL;
+    }
+    Playlist* temp = playlist;
+    if(temp->next == NULL){
+        free(temp);
+        printf("Successfully delete the playlist\n");
+        return playlist;
+    }
+    int count = 0;
+    while (temp->next != NULL && count < index){
+        temp = temp->next;
+        count++;
+    }
+    Playlist* deleted = temp->next;
+    if(temp->next == NULL){
+        free(deleted);
+        return playlist;
+    }
+    temp->next = deleted->next;
+    free(deleted);
+    printf("Successfully delete the playlist\n");
+    return playlist;
+}
+
 void savePlaylist(Playlist* playlist, int index){
     Playlist* curr = findPlaylistByIndex(playlist, index);
     if(curr == NULL) {
@@ -167,4 +194,55 @@ void savePlaylist(Playlist* playlist, int index){
         }
     }
     fclose(fptr);
+}
+
+void listFileInPlaylistFolder(){
+    DIR *dir;
+    struct dirent *entry;
+    dir = opendir("playlist");
+    if (dir == NULL) {
+        perror("opendir failed");
+        return;
+
+    }
+    int idx = 1;
+    printf("Playlist files that you can open : \n");
+    while ((entry = readdir(dir)) != NULL) {
+        if(strlen(entry->d_name) > 2){
+            printf("%d %s\n", idx, entry->d_name); 
+            idx++;
+        }
+    }
+    closedir(dir);
+}
+
+void readPlaylist() {
+    FILE *fptr;
+    char readData[1024];
+    Song* song = NULL; 
+
+    fptr = fopen("playlist/pujo.txt", "r");
+    if (fptr == NULL) {
+        printf("Error: Unable to open file\n");
+        return;
+    }
+
+    while (fgets(readData, 1024, fptr) != NULL) {
+        if (strncmp(readData, "Title: ", 7) == 0) {
+            sscanf(readData, "Title: %99[^\n]", song->title);
+        } else if (strncmp(readData, "Singer: ", 8) == 0) {
+            sscanf(readData, "Singer: %99[^\n]", song->singer);
+        } else if (strncmp(readData, "Album: ", 7) == 0) {
+            sscanf(readData, "Album: %99[^\n]", song->album);
+        } else if (strncmp(readData, "Time: ", 6) == 0) {
+            sscanf(readData, "Time: %lf", &song->time);
+        }
+    }
+    fclose(fptr);
+
+    printf("Data successfully read from playlist:\n");
+    printf("%s\n", song->title);
+    printf("%s\n", song->singer);
+    printf("%s\n", song->album);
+    printf("%.2f\n", song->time);
 }

@@ -7,7 +7,29 @@
 
 
 #define MAX_LEN 128
+void SpotifyText(){
+    printf("\033[1;32m");
+    printf("\n          ██████████                                                                                            \n");
+    printf("        ██████████████████                                                                                        \n");
+    printf("     ████████████████████████                                                                                     \n");
+    printf("    ██████████████████████████                                                                                    \n");
+    printf("  ██████████████████████████████                                                       ███                        \n");
+    printf(" █████                  █████████        █████████                             ███    ████   █████                \n");
+    printf(" █████      █████           █████       ███    ███                             ███          ███                   \n");
+    printf("█████████████████████████    █████      ███         ███ ██████     ████████   ████████ ███ █████████     ████ ██  \n");
+    printf("███████               ████████████      ████████    ████    ████  ████   ████  ████    ███  ███   ███    ███      \n");
+    printf("███████   ████████        ████████         ███████  ███      ███ ███      ████ ███     ███  ███    ███  ███       \n");
+    printf("████████████████████████   ███████              ███ ███      ███ ███      ████ ███     ███  ███    ███████        \n");
+    printf(" ██████               ███████████       ███     ███ ████    ████  ███    ████  ████    ███  ███     ██████        \n");
+    printf(" ████████████████████    ████████       ██████████  ███████████    █████████    █████  ███  ███      ████         \n");
+    printf("  ██████████████████████████████                    ███                                           █  ███          \n");
+    printf("    ██████████████████████████                      ███                                           █████           \n");
+    printf("     ████████████████████████                                                                                     \n");
+    printf("        ██████████████████                                                                                        \n");
+    printf("           ████████████                                                                                          \n");
+    printf("\033[0m");
 
+}
 void printSongInsidePlaylist(Playlist* playlist, int index) {
     Playlist* curr = findPlaylistByIndex(playlist, index);
     if(curr != NULL){
@@ -57,6 +79,7 @@ void playlistMenu(Playlist* playlist) {
         printf("1. See songs in playlist\n");
         printf("2. Add a song to playlist\n");
         printf("3. Remove a song from playlist\n");
+        printf("4. Delete playlist\n");
         printf("4. Back to main menu\n");
         printf("Enter your choice: ");
         scanf(" %c", &choice);
@@ -131,8 +154,16 @@ void playlistMenu(Playlist* playlist) {
                 remove[strcspn(remove, "\n")] = '\0';
                 deleteSongFromPlaylist(playlist, idxtoremove, remove);
                 break;
-
+            
             case '4':
+                printf("\033[2J\033[H");
+                SpotifyText();
+                printPlaylist(playlist);
+                printf("enter the number of the playlist you want to delete: ");
+                scanf(" %d", &idxtoremove);
+                deletePlaylist(playlist, idxtoremove);
+                break;
+            case '5':
                 printf("\033[2J\033[H");       
                 SpotifyText();             
                 break;
@@ -142,12 +173,6 @@ void playlistMenu(Playlist* playlist) {
         }
     } while (choice != '4');
     
-}
-void header(FILE *fptr){
-    char read_string[MAX_LEN];
- 
-    while(fgets(read_string,sizeof(read_string),fptr) != NULL)
-        printf("%s",read_string);
 }
 
 void dashboardMenu(Playlist* playlist){
@@ -222,31 +247,10 @@ void dashboardMenu(Playlist* playlist){
 
 }
 
-void SpotifyText(){
-    printf("\033[1;32m");
-    printf("\n          ██████████                                                                                            \n");
-    printf("        ██████████████████                                                                                        \n");
-    printf("     ████████████████████████                                                                                     \n");
-    printf("    ██████████████████████████                                                                                    \n");
-    printf("  ██████████████████████████████                                                       ███                        \n");
-    printf(" █████                  █████████        █████████                             ███    ████   █████                \n");
-    printf(" █████      █████           █████       ███    ███                             ███          ███                   \n");
-    printf("█████████████████████████    █████      ███         ███ ██████     ████████   ████████ ███ █████████     ████ ██  \n");
-    printf("███████               ████████████      ████████    ████    ████  ████   ████  ████    ███  ███   ███    ███      \n");
-    printf("███████   ████████        ████████         ███████  ███      ███ ███      ████ ███     ███  ███    ███  ███       \n");
-    printf("████████████████████████   ███████              ███ ███      ███ ███      ████ ███     ███  ███    ███████        \n");
-    printf(" ██████               ███████████       ███     ███ ████    ████  ███    ████  ████    ███  ███     ██████        \n");
-    printf(" ████████████████████    ████████       ██████████  ███████████    █████████    █████  ███  ███      ████         \n");
-    printf("  ██████████████████████████████                    ███                                           █  ███          \n");
-    printf("    ██████████████████████████                      ███                                           █████           \n");
-    printf("     ████████████████████████                                                                                     \n");
-    printf("        ██████████████████                                                                                        \n");
-    printf("           ████████████                                                                                          \n");
-    printf("\033[0m");
-
-}
 int main(){
     Playlist* playlists = NULL;
+    // listFileInPlaylistFolder();
+    // readPlaylist();
     SpotifyText();
     dashboardMenu(playlists);
     return 0;
