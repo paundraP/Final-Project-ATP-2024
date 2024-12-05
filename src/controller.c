@@ -90,8 +90,7 @@ void addSongToPlaylist(Playlist* playlist, int index, char title[], char singer[
 
 
 Playlist* addNewPlaylist(struct Playlist* playlist, char playlistname[]){
-    if (playlistExists(playlist, playlistname)) {
-        printf("\033[2J\033[H");                    
+    if (playlistExists(playlist, playlistname)) {                   
         printf("\nPlaylist with the name '%s' already exists.\n\n", playlistname);
         return playlist;
     }else {                            

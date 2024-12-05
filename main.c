@@ -78,11 +78,11 @@ Playlist* playlistMenu(Playlist* playlist) {
         printf("\033[1;32m");
         printf("\033[1m\n-- PLAYLIST MANAGER --\033[0m\n");
         printf("\033[0m");
-        printf("1. See songs in playlist\n");
-        printf("2. Add a song to playlist\n");
-        printf("3. Remove a song from playlist\n");
-        printf("4. Delete playlist\n");
-        printf("5. Back to main menu\n");
+        printf("a. See songs in playlist\n");
+        printf("b. Add a song to playlist\n");
+        printf("c. Remove a song from playlist\n");
+        printf("d. Delete playlist\n");
+        printf("e. Back to main menu\n");
         printf("Enter your choice: ");
         scanf(" %c", &choice);
         getchar();
@@ -203,7 +203,8 @@ Playlist* dashboardMenu(Playlist* playlist){
                 playlistName[strcspn(playlistName, "\n")] = '\0';
                 printf("\033[2J\033[H");
                 SpotifyText();
-		        playlist = addNewPlaylist(playlist, playlistName);                
+		        playlist = addNewPlaylist(playlist, playlistName);  
+
                 break;
 
 
