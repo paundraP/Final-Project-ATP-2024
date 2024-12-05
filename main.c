@@ -33,18 +33,29 @@ void SpotifyText(){
 void printSongInsidePlaylist(Playlist* playlist, int index) {
     Playlist* curr = findPlaylistByIndex(playlist, index);
     if(curr != NULL){
-        int nameLength = strlen(playlist->playlistName);
-        int padding = (159 - nameLength - 10) / 2;
         Song* song = curr->song; 
+        int len = strlen(curr->playlistName);
+        int width = len > 159 ? len : 159;
+        int textLength = strlen(curr->playlistName);
+        int leftPadding = (width - textLength) / 2; // Calculate left padding
+        int rightPadding = width - textLength - leftPadding; // Calculate right padding
         if(song != NULL){
-            printf("%.*s Playlist %s %.*s\n", padding, "=======================================================================================", playlist->playlistName, padding, "=======================================================================================");
-            printf("%-50s %-50s %-50s %s\n", "Judul", "Penyanyi", "Album", "Waktu");
-                while (song != NULL) {  
-                    printf("%-50s %-50s %-50s %.2f\n", song->title, song->singer, song->album, song->time);
-                    song = song->next; 
-                }
-                curr = curr->next; 
-            printf("\n");
+            printf("+%.*s+\n", 200, "=========================================================================================================================================================================");
+            printf("|\033[1;32m");
+            printf("%*sPlaylist: %s%*s\033[0m|\n", leftPadding, "", curr->playlistName, rightPadding, "");
+            // printf("");
+            printf("+%.*s+\n", 200, "=========================================================================================================================================================================");
+
+            // Header tabel
+            printf("| %-50s | %-50s | %-50s | %-8s |\n", "Judul", "Penyanyi", "Album", "Waktu");
+            printf("+----------------------------------------------------+----------------------------------------------------+----------------------------------------------------+----------+\n");
+
+            // Baris data tabel
+            while (song != NULL) {
+                printf("| %-50s | %-50s | %-50s | %-8.2f |\n", song->title, song->singer, song->album, song->time);
+                song = song->next;
+                printf("+%.*s+\n", 200, "=========================================================================================================================================================================");
+            }
         }else{
             printf("\n\033[0;37;41mNo songs in this playlist.\033[0m\n");
             return;
