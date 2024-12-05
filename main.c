@@ -63,6 +63,7 @@ void printPlaylist(Playlist* playlist) {
         i++;
         curr = curr->next;
     }
+    printf("NULL\n");
 }
 
 void playlistMenu(Playlist* playlist) {
@@ -80,7 +81,7 @@ void playlistMenu(Playlist* playlist) {
         printf("2. Add a song to playlist\n");
         printf("3. Remove a song from playlist\n");
         printf("4. Delete playlist\n");
-        printf("4. Back to main menu\n");
+        printf("5. Back to main menu\n");
         printf("Enter your choice: ");
         scanf(" %c", &choice);
         getchar();
@@ -171,7 +172,7 @@ void playlistMenu(Playlist* playlist) {
             default:
                 printf("\nInvalid choice. Please try again.\n\n");
         }
-    } while (choice != '4');
+    } while (choice != '5');
     
 }
 
