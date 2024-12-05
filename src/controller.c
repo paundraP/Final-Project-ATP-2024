@@ -99,11 +99,11 @@ Song* createSong(char new_singer[], char new_title[], char new_album[], double n
 void addSongToPlaylist(Playlist* playlist, int index, char title[], char singer[], char album[], double time) {
     Playlist* targetPlaylist = findPlaylistByIndex(playlist, index);
     if (targetPlaylist == NULL) {
-        printf("\nPlaylist not found.\n");
+        printf("\n\033[0;37;41mPlaylist not found.\033[0m\n");
         return;
     }else{
         if (isSongInPlaylist(targetPlaylist->song, title)) {
-            printf("\nSong '%s' already exists in the playlist '%s'.\n", title, targetPlaylist->playlistName);
+            printf("\n\033[0;37;41mSong '%s' already exists in the playlist '%s'.\033[0m\n", title, targetPlaylist->playlistName);
             return;
         }else{
             Song* newSong = createSong(singer, title, album, time);
@@ -119,7 +119,7 @@ void addSongToPlaylist(Playlist* playlist, int index, char title[], char singer[
                 }
                 temp->next = newSong; 
             }
-            printf("\nSong '%s' added to playlist '%s'.\n", title, targetPlaylist->playlistName);
+            printf("\n\033[0;42mSong '%s' added to playlist '%s'.\033[0m\n", title, targetPlaylist->playlistName);
             return;
         }
     }
@@ -128,10 +128,10 @@ void addSongToPlaylist(Playlist* playlist, int index, char title[], char singer[
 
 Playlist* addNewPlaylist(struct Playlist* playlist, char playlistname[]){
     if (playlistExists(playlist, playlistname)) {                   
-        printf("\nPlaylist with the name '%s' already exists.\n\n", playlistname);
+        printf("\n\033[0;37;41mPlaylist with the name '%s' already exists.\033[0m\n\n", playlistname);
         return playlist;
     }else {                            
-        printf("\nplaylist %s created\n\n", playlistname);
+        printf("\n\033[0;42mplaylist %s created\033[0m\n\n", playlistname);
     }
 
     struct Playlist* new_playlist = createPlaylist(playlistname);
@@ -149,7 +149,7 @@ Playlist* addNewPlaylist(struct Playlist* playlist, char playlistname[]){
 Playlist* deleteSongFromPlaylist(Playlist* playlist, int index, char songName[]) {
     Playlist* temp = findPlaylistByIndex(playlist, index);
     if (temp == NULL) {
-        printf("Index out of bound!\n");
+        printf("\033[0;37;41mIndex out of bound!\033[0m\n");
         return playlist;
     }
 
@@ -164,14 +164,14 @@ Playlist* deleteSongFromPlaylist(Playlist* playlist, int index, char songName[])
                 previous->next = current->next;
             }
             free(current);
-            printf("Song deleted successfully.\n");
+            printf("\n\033[0;42mSong deleted successfully.\033[0m\n");
             return playlist;
         }
         previous = current;
         current = current->next;
     }
 
-    printf("The song you want to delete is not known, or you're mistyping.\n");
+    printf("\n\033[0;37;41mThe song you want to delete is not known, or you're mistyping.\033[0m\n");
     return playlist;
 }
 
@@ -186,7 +186,7 @@ Playlist* deleteHeadPlaylist(Playlist* playlist) {
 
 Playlist* deletePlaylist(Playlist* playlist, int index) {
     if (playlist == NULL) {
-        printf("There is no playlist yet\n");
+        printf("\n\033[0;37;41mThere is no playlist yet\033[0m\n");
         return playlist;
     }
 
@@ -194,7 +194,7 @@ Playlist* deletePlaylist(Playlist* playlist, int index) {
 
     if (index == 1) {
         playlist = deleteHeadPlaylist(playlist);
-        printf("\nSuccessfully deleted the playlist\n");
+        printf("\n\033[0;42mSuccessfully deleted the playlist\033[0m\n");
         return playlist;
     }
 
@@ -205,12 +205,12 @@ Playlist* deletePlaylist(Playlist* playlist, int index) {
     }
 
     if (temp == NULL) {
-        printf("\nError: Invalid index\n");
+        printf("\n\033[0;37;41mError: Invalid index\033[0m\n");
         return playlist;
     }
     prev->next = temp->next; 
     free(temp);             
-    printf("\nSuccessfully deleted the playlist\n");
+    printf("\n\033[0;42mSuccessfully deleted the playlist\033[0m\n");
 
     return playlist;
 }
@@ -218,12 +218,12 @@ Playlist* deletePlaylist(Playlist* playlist, int index) {
 void savePlaylist(Playlist* playlist, int index){
     Playlist* curr = findPlaylistByIndex(playlist, index);
     if(curr == NULL) {
-        printf("\nThe playlist you want to save is unknow, or youre mistyping\n");
+        printf("\n\033[0;37;41mThe playlist you want to save is unknown, or youre mistyping\033[0m\n");
         return;
     }
     
     if (curr->song == NULL){
-        printf("\nThe playlist you want to save is empty yet\n");
+        printf("\n\033[0;37;41mThe playlist you want to save is empty yet\033[0m\n");
         return;
     }
     FILE *fptr;
@@ -234,7 +234,7 @@ void savePlaylist(Playlist* playlist, int index){
     fprintf(fptr, "title, singer, album, duration\n");
     Song* temp = curr->song;
     if(fptr == NULL){
-        printf("\nError saving file\n\n");
+        printf("\n\033[0;37;41mError saving file\033[0m\n\n");
         return;
     }
     else{
@@ -244,7 +244,7 @@ void savePlaylist(Playlist* playlist, int index){
         }
     }
     fclose(fptr);
-    printf("\nThe playlist %s save to playlist/%s.txt\n",curr->playlistName,curr->playlistName);
+    printf("\n\033[0;42mThe playlist %s save to playlist/%s.txt\033[0m\n",curr->playlistName,curr->playlistName);
 
 }
 
@@ -253,7 +253,7 @@ void listFileInPlaylistFolder(){
     struct dirent *entry;
     dir = opendir("playlist");
     if (dir == NULL) {
-        perror("\nopendir failed");
+        perror("\n\033[0;37;41mopendir failed\033[0m");
         return;
 
     }
@@ -288,7 +288,7 @@ Playlist* readPlaylist(struct Playlist* playlist, char playlistName[]) {
     fptr = fopen(filePath, "r");
 
     if (fptr == NULL) {
-        printf("\nError: Unable to open file\n");
+        printf("\n\033[0;37;41mError: Unable to open file\033[0m\n");
         return 0;
     }
     
@@ -306,7 +306,7 @@ Playlist* readPlaylist(struct Playlist* playlist, char playlistName[]) {
         if (sscanf(readData, "%[^,],%[^,],%[^,],%f", title, singer, album, &duration) == 4) {
             addSongToPlaylist(playlist, idx, title, singer, album, duration);
         }else{
-            printf("skipping data in line %d error to parse",idx);
+            printf("\033[0;37;41mskipping data in line %d error to parse\033[0m",idx);
         }
     }
     

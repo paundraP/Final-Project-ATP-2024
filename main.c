@@ -46,11 +46,11 @@ void printSongInsidePlaylist(Playlist* playlist, int index) {
                 curr = curr->next; 
             printf("\n");
         }else{
-            printf("\nNo songs in this playlist\n");
+            printf("\n\033[0;37;41mNo songs in this playlist.\033[0m\n");
             return;
         }
     }else{
-        printf("\nInvalid number, playlist not exists\n");
+        printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
         return;
     }
 }
@@ -59,7 +59,7 @@ void printPlaylist(Playlist* playlist) {
     Playlist* temp = playlist;
     int index = 1;
     if (temp == NULL) {
-        printf("\nNo playlists available.\n\n");
+        printf("\n\033[0;37;41mNo playlists available.\033[0m\n");
         return;
     }
     printf("\nNo.   Playlist Name\n");
@@ -90,7 +90,9 @@ Playlist* playlistMenu(Playlist* playlist) {
 
         switch (choice) {
             case 'a':         
-                printf("\033[2J\033[H");
+                // printf("\033[2J\033[H");
+                // system("clear");
+                system("clear");
                 SpotifyText();
                 printPlaylist(playlist);
                 printf("see song inside playlist!\n");
@@ -100,7 +102,8 @@ Playlist* playlistMenu(Playlist* playlist) {
                 break;
 
             case 'b':
-                printf("\033[2J\033[H");
+                // printf("\033[2J\033[H");
+                system("clear");
                 SpotifyText();
                 printPlaylist(playlist);
                 printf("\nadd song to playlist!\n");
@@ -112,7 +115,7 @@ Playlist* playlistMenu(Playlist* playlist) {
                 fgets(title, sizeof(title), stdin); 
                 title[strcspn(title, "\n")] = '\0';
                 if(title[0] == '\0'){
-                    printf("the title is required\n");
+                    printf("\n\033[0;37;41mThe title is required.\033[0m\n");
                     break;
                 }
 
@@ -120,7 +123,7 @@ Playlist* playlistMenu(Playlist* playlist) {
                 fgets(singer, sizeof(singer), stdin); 
                 singer[strcspn(singer, "\n")] = '\0';
                 if(singer[0] == '\0'){
-                    printf("the singer is required\n");
+                    printf("\n\033[0;37;41mThe singer is required.\033[0m\n");
                     break;
                 }
 
@@ -128,14 +131,14 @@ Playlist* playlistMenu(Playlist* playlist) {
                 fgets(album, sizeof(album), stdin); 
                 album[strcspn(album, "\n")] = '\0';
                 if(album[0] == '\0'){
-                    printf("the album is required\n");
+                    printf("\n\033[0;37;41mThe album is required.\033[0m\n");
                     break;
                 }
 
                 printf("Enter the duration of the song to add with format (0.00): ");
                 if (scanf("%f%c", &duration, &extra) == 2 && extra == '\n');
                 else {
-                    printf("Invalid input. must be a float.\n");
+                    printf("\n\033[0;37;41mInvalid input. must be a float.\033[0m\n");
                     while ((extra = getchar()) != '\n' && extra != EOF);
                     break;
                 }
@@ -148,7 +151,8 @@ Playlist* playlistMenu(Playlist* playlist) {
             
             
             case 'c':
-                printf("\033[2J\033[H");
+                // printf("\033[2J\033[H");
+                system("clear");
                 SpotifyText();
                 printPlaylist(playlist);
                 printf("enter the number of the playlist that contains the song you want to delete: ");
@@ -162,17 +166,18 @@ Playlist* playlistMenu(Playlist* playlist) {
                     strip(remove);
                     deleteSongFromPlaylist(playlist, idxtoremove, remove);
                 }else{
-                    printf("\nplaylist not found\n");
+                    printf("\n\033[0;37;41mPlaylist not found.\033[0m\n");
                 }
                 break;
 
             case 'd':
-                printf("\033[2J\033[H");       
+                // printf("\033[2J\033[H");       
+                system("clear");
                 SpotifyText();             
                 break;
 
             default:
-                printf("\nInvalid choice. Please try again.\n\n");
+                printf("\n\033[0;37;41mInvalid choice. Please try again.\033[0m\n");
         }
     } while (choice != 'd');
     return playlist;
@@ -203,7 +208,8 @@ Playlist* dashboardMenu(Playlist* playlist){
                 printf("Enter playlist name: ");
                 fgets(playlistName, sizeof(playlistName), stdin); 
                 playlistName[strcspn(playlistName, "\n")] = '\0';
-                printf("\033[2J\033[H");
+                // printf("\033[2J\033[H");
+                system("clear");
                 SpotifyText();
                 strip(playlistName);
 		        playlist = addNewPlaylist(playlist, playlistName);  
@@ -213,9 +219,10 @@ Playlist* dashboardMenu(Playlist* playlist){
 
             case 'b':
                 if (playlist == NULL) {
-                    printf("\nThe playlists list is empty.\n");
+                    printf("\n\033[0;37;41mThe playlists list is empty.\033[0m\n");
                 } else {
-                    printf("\033[2J\033[H");    
+                    // printf("\033[2J\033[H");    
+                    system("clear");
                     SpotifyText();                
                     printPlaylist(playlist);
                     playlist = playlistMenu(playlist);
@@ -223,7 +230,8 @@ Playlist* dashboardMenu(Playlist* playlist){
                 break;
 
             case 'c':
-                printf("\033[2J\033[H");
+                // printf("\033[2J\033[H");
+                system("clear");
                 SpotifyText();
                 printPlaylist(playlist);
                 if(playlist!=NULL){
@@ -234,17 +242,20 @@ Playlist* dashboardMenu(Playlist* playlist){
                 break;
 
             case 'd':
-                printf("\033[2J\033[H");   
+                // printf("\033[2J\033[H");   
+                system("clear");
                 SpotifyText();
                 if(playlist == NULL){
-                    printf("\033[2J\033[H");
+                    // printf("\033[2J\033[H");
+                    system("clear");
                     SpotifyText();
-                    printf("youre playlist is empty yet");
+                    printf("\033[0;37;41myoure playlist is empty yet\033[0m");
                 }else{
                     printPlaylist(playlist);
                     printf("Which playlist you want to save? (choose number of playlist): ");
                     scanf(" %d", &save);
-                    printf("\033[2J\033[H");
+                    // printf("\033[2J\033[H");
+                    system("clear");
                     SpotifyText();
                     savePlaylist(playlist, save);
                 }
@@ -254,7 +265,8 @@ Playlist* dashboardMenu(Playlist* playlist){
                 printf("Enter playlist name: ");
                 fgets(playlistName, sizeof(playlistName), stdin); 
                 playlistName[strcspn(playlistName, "\n")] = '\0';
-                printf("\033[2J\033[H");
+                // printf("\033[2J\033[H");
+                system("clear");
                 SpotifyText();
                 strip(playlistName);
                 playlist = readPlaylist(playlist,playlistName);
@@ -264,7 +276,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                 return playlist;
 
             default:
-                printf("\nInvalid choice. Please try again.\n");
+                printf("\n\033[0;37;41mInvalid choice. Please try again.\033[0m\n");
         }
     } while (choice != 'f');
     return playlist;
