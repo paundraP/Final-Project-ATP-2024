@@ -54,19 +54,20 @@ void printSongInsidePlaylist(Playlist* playlist, int index) {
 }
 
 void printPlaylist(Playlist* playlist) {
-    Playlist* curr = playlist;
-    printf("\nPlaylists you've created:\n\n");
-    int i = 1;
-    printf("%-3s %-50s\n", "No.", "Playlist Name");
-    while (curr != NULL) {
-        printf("%-3d %-50s\n", i, curr->playlistName);
-        i++;
-        curr = curr->next;
+    Playlist* temp = playlist;
+    int index = 1;
+    if (temp == NULL) {
+        printf("No playlists available.\n");
+        return;
     }
-    printf("NULL\n");
+    printf("No.   Playlist Name\n");
+    while (temp != NULL) {
+        printf("%d     %s\n", index++, temp->playlistName);
+        temp = temp->next;
+    }
 }
 
-void playlistMenu(Playlist* playlist) {
+Playlist* playlistMenu(Playlist* playlist) {
     char choice, extra;
     char title[50], singer[50], album[50], remove[50];
     float duration;
@@ -162,7 +163,11 @@ void playlistMenu(Playlist* playlist) {
                 printPlaylist(playlist);
                 printf("enter the number of the playlist you want to delete: ");
                 scanf(" %d", &idxtoremove);
-                deletePlaylist(playlist, idxtoremove);
+                playlist = deletePlaylist(playlist, idxtoremove);
+                if(playlist == NULL) {
+                    printf("playlist kosong\n");
+                    return playlist;
+                }
                 break;
             case '5':
                 printf("\033[2J\033[H");       
@@ -173,10 +178,10 @@ void playlistMenu(Playlist* playlist) {
                 printf("\nInvalid choice. Please try again.\n\n");
         }
     } while (choice != '5');
-    
+    return playlist;
 }
 
-void dashboardMenu(Playlist* playlist){
+Playlist* dashboardMenu(Playlist* playlist){
     char choice;
     int save;
     char playlistName[50];
@@ -212,7 +217,7 @@ void dashboardMenu(Playlist* playlist){
                     printf("\033[2J\033[H");    
                     SpotifyText();                
                     printPlaylist(playlist);
-                    playlistMenu(playlist);
+                    playlist = playlistMenu(playlist);
                 }
                 break;
 
@@ -220,7 +225,7 @@ void dashboardMenu(Playlist* playlist){
                 printf("\033[2J\033[H");   
                 SpotifyText();
                 if(playlist == NULL){
-                    printf("youre playlist is empty yet");
+                    printf("youre playlist is empty yet");
                 }else{
                     printPlaylist(playlist);
                     printf("Which playlist you want to save? ");
@@ -238,14 +243,14 @@ void dashboardMenu(Playlist* playlist){
 
             case 'e':
                 free(playlist);
-                return;
+                return playlist;
                 // break;
 
             default:
                 printf("\nInvalid choice. Please try again.\n");
         }
     } while (choice != 'e');
-
+    return playlist;
 }
 
 int main(){
@@ -253,6 +258,6 @@ int main(){
     // listFileInPlaylistFolder();
     // readPlaylist();
     SpotifyText();
-    dashboardMenu(playlists);
+    playlists = dashboardMenu(playlists);
     return 0;
 }

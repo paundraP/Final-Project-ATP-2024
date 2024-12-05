@@ -140,6 +140,15 @@ Playlist* deleteSongFromPlaylist(Playlist* playlist, int index, char songName[])
     return playlist;
 }
 
+Playlist* deleteHeadPlaylist(Playlist* playlist) {
+    if (playlist == NULL) {
+        return NULL;
+    }
+    Playlist* newHead = playlist->next;
+    free(playlist);
+    return newHead;
+}
+
 Playlist* deletePlaylist(Playlist* playlist, int index) {
     if (playlist == NULL) {
         printf("There is no playlist yet\n");
@@ -149,9 +158,8 @@ Playlist* deletePlaylist(Playlist* playlist, int index) {
     Playlist* temp = playlist;
 
     if (index == 1) {
-        playlist = temp->next; 
-        free(temp);            
-        printf("Successfully deleted the playlist\n");
+        playlist = deleteHeadPlaylist(playlist);
+        printf("Head deleted\n");
         return playlist;
     }
 
