@@ -163,11 +163,7 @@ Playlist* playlistMenu(Playlist* playlist) {
                 printPlaylist(playlist);
                 printf("enter the number of the playlist you want to delete: ");
                 scanf(" %d", &idxtoremove);
-                playlist = deletePlaylist(playlist, idxtoremove);
-                if(playlist == NULL) {
-                    printf("playlist kosong\n");
-                    return playlist;
-                }
+                playlist = deletePlaylist(playlist, idxtoremove); 
                 break;
             case '5':
                 printf("\033[2J\033[H");       
