@@ -242,7 +242,6 @@ Playlist* dashboardMenu(Playlist* playlist){
                 break;
 
             case 'e':
-                free(playlist);
                 return playlist;
                 // break;
 
@@ -259,5 +258,6 @@ int main(){
     // readPlaylist();
     SpotifyText();
     playlists = dashboardMenu(playlists);
+    free(playlists);
     return 0;
 }
