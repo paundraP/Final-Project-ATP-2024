@@ -183,7 +183,7 @@ void savePlaylist(Playlist* playlist, int index){
         return;
     }
     FILE *fptr;
-    char filename[50];
+    char filename[113];
     snprintf(filename, sizeof(filename), "playlist/%s.txt", curr->playlistName);
 
     fptr = fopen(filename, "w");
