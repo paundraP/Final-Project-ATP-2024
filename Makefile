@@ -1,6 +1,6 @@
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -Iinclude -static
 
 SRC_DIR = src
 BUILD_DIR = build
@@ -25,7 +25,8 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(OBJS) -o $(TARGET)
-	@mkdir -p playlist
+	@mkdir -p playlists
+	@mkdir -p songs
 
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -33,6 +34,7 @@ $(BUILD_DIR)/%.o: %.c
 
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -rf songs
 
 .PHONY: all clean run
 
