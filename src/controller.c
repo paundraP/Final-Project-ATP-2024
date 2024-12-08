@@ -10,10 +10,9 @@
 #include <math.h>
 #include <termios.h>
 #include <fcntl.h> 
-#include "dto.h"
+#include <fcntl.h>
 #include "mpg123.h"
 #include "dto.h"
-#include "mpg123.h"
 
 void SpotifyText(){
     printf("\033[1;32m"); // Set text color to bright green
@@ -83,17 +82,6 @@ bool isEmptyOrSpaces(const char *str) {
     }
     return true; // If no non-space characters are found, return true
 }
-
-void enableNonBlockingInput() {
-    int flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Get current flags
-    fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK); // Set non-blocking
-}
-
-void disableNonBlockingInput() {
-    int flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Get current flags
-    fcntl(STDIN_FILENO, F_SETFL, flags & ~O_NONBLOCK); // Unset non-blocking
-}
-#include "dto.h"
 
 
 void enableNonBlockingInput() {
@@ -519,6 +507,37 @@ int playable(char songName[]){
     }
     closedir(dir);
     return 0;
+}
+
+int playProgressBar(int totalSeconds) {
+    const int progressBarWidth = 100;
+    
+    printf("\n\n\t\t\tSong Progress:\n\n");
+    fflush(stdout);
+
+    enableNonBlockingInput();
+
+    for (int elapsed = 0; elapsed <= totalSeconds; elapsed++) {
+        int c = getchar();
+        if (c != EOF) { // Check if a key is pressed
+            if (c == '\n') {
+                disableNonBlockingInput(); // Restore normal input mode
+                printf("\n\t\t\tProgress interrupted.\n");
+                return 0;
+            }
+        }
+        int progress = (progressBarWidth * elapsed) / totalSeconds; 
+        printf("\r\t\t\t[");
+        for (int i = 0; i < progress; i++) 
+            printf("#");
+        for (int i = progress; i < progressBarWidth; i++) 
+            printf(" ");
+        printf("] %3d%%", (progress * 100) / progressBarWidth);
+        
+        fflush(stdout);
+        sleep(1);
+    }
+    return 1;
 }
 
 char* escape(char* str) {
