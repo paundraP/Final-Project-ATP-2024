@@ -20,4 +20,5 @@ char* strip(char* str);
 void playSong(Playlist* playlist, int index, char songName[]);
 float getSongDuration(char filename[]);
 char* escape(char* str);
+
 #endif
