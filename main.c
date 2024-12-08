@@ -49,7 +49,7 @@ void printSongInsidePlaylist(Playlist* playlist, int index) {
             printf("+%.*s+\n", 200, "=========================================================================================================================================================================");
 
             // Header tabel
-            printf("| %-50s | %-50s | %-50s | %-8s |\n", "Judul", "Penyanyi", "Album", "Waktu");
+            printf("| %-50s | %-50s | %-50s | %-8s |\n", "Title", "Singer", "Album", "Duration");
             printf("+----------------------------------------------------+----------------------------------------------------+----------------------------------------------------+----------+\n");
 
             // Baris data tabel
@@ -84,9 +84,9 @@ void printPlaylist(Playlist* playlist) {
 
 Playlist* playlistMenu(Playlist* playlist) {
     char choice, extra;
-    char title[50], singer[50], album[50], remove[50];
+    char title[50], singer[50], album[50], remove[50], play[50];
     float duration;
-    int idx, idxtoremove;
+    int idx, idxtoremove, idxtoplay;
 
     do {
         // SpotifyText();
@@ -96,7 +96,8 @@ Playlist* playlistMenu(Playlist* playlist) {
         printf("a. See songs in playlist\n");
         printf("b. Add a song to playlist\n");
         printf("c. Remove a song from playlist\n");
-        printf("d. Back to main menu\n");
+        printf("d. Play song\n");
+        printf("e. Back to main menu\n");
         printf("Enter your choice: ");
         scanf(" %c", &choice);
         getchar();
@@ -182,8 +183,25 @@ Playlist* playlistMenu(Playlist* playlist) {
                     printf("\n\033[0;37;41mPlaylist not found.\033[0m\n");
                 }
                 break;
-
             case 'd':
+                system("clear");
+                SpotifyText();
+                printPlaylist(playlist);
+                printf("enter the number of playlist that contains the song you want to play: ");
+                scanf(" %d", &idxtoplay);
+                getchar();
+                if(findPlaylistByIndex(playlist, idxtoplay)){
+                    printSongInsidePlaylist(playlist, idxtoplay);
+                    printf("enter the name of the song you want to play: ");
+                    fgets(play, sizeof(play), stdin); 
+                    play[strcspn(play, "\n")] = '\0';
+                    strip(play);
+                    playSong(playlist, idxtoplay, play);
+                }else{
+                    printf("\n\033[0;37;41mPlaylist not found.\033[0m\n");
+                }
+                break;
+            case 'e':
                 // printf("\033[2J\033[H");       
                 system("clear");
                 SpotifyText();             
@@ -192,7 +210,7 @@ Playlist* playlistMenu(Playlist* playlist) {
             default:
                 printf("\n\033[0;37;41mInvalid choice. Please try again.\033[0m\n");
         }
-    } while (choice != 'd');
+    } while (choice != 'e');
     return playlist;
 }
 
@@ -296,6 +314,7 @@ Playlist* dashboardMenu(Playlist* playlist){
 }
 
 int main(){
+    // getSongDuration("blue.mp3");
     Playlist* playlists = NULL;
     SpotifyText();
     playlists = dashboardMenu(playlists);

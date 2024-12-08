@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <ctype.h>
+#include <time.h>
+#include <unistd.h> 
+#include <termios.h>
+#include <fcntl.h> 
 #include "dto.h"
 
 char* strip(char* str) {
@@ -251,11 +255,10 @@ void savePlaylist(Playlist* playlist, int index){
 void listFileInPlaylistFolder(){
     DIR *dir;
     struct dirent *entry;
-    dir = opendir("playlist");
+    dir = opendir("playlists");
     if (dir == NULL) {
         perror("\n\033[0;37;41mopendir failed\033[0m");
         return;
-
     }
     
     printf("\nPlaylist files that you can open : \n");
@@ -275,7 +278,7 @@ void listFileInPlaylistFolder(){
     closedir(dir);
 }
 
-Playlist* readPlaylist(struct Playlist* playlist, char playlistName[]) {
+Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
     char title[50], singer[50], album[50];
     float duration;
     FILE *fptr;
@@ -314,4 +317,69 @@ Playlist* readPlaylist(struct Playlist* playlist, char playlistName[]) {
     idx++;
 
     return playlist;
+}
+
+int playable(char songName[]){
+    DIR *dir;
+    struct dirent *entry;
+    dir = opendir("songs");
+    if (dir == NULL) {
+        perror("\n\033[0;37;41mopendir failed\033[0m");
+        return 0;
+    }
+    
+    while ((entry = readdir(dir)) != NULL) {
+        char *filename = entry->d_name;
+        char *dot = strrchr(filename, '.');
+        if(dot && strcmp(dot, ".mp3") == 0) {
+            char nameWithoutExtension[256];
+            strncpy(nameWithoutExtension, filename, dot - filename);
+            nameWithoutExtension[dot - filename] = '\0';
+
+            if(strcmp(nameWithoutExtension, songName) == 0){
+                closedir(dir);
+                return 1;
+            }
+        }
+    }
+    closedir(dir);
+    return 0;
+}
+
+void playSong(Playlist* playlist, int index, char songName[]) {
+    Playlist* temp = findPlaylistByIndex(playlist, index);
+    if (temp == NULL) {
+        printf("\033[0;37;41mIndex out of bounds!\033[0m\n");
+        return;
+    }
+
+    Song* curr = temp->song;
+    while (curr != NULL) {
+        if (strcmp(curr->title, songName) == 0 && playable(songName)) {
+            printf("\033[0;37;42mNow playing:\033[0m\n");
+            printf("Title: %s\n", curr->title);
+            printf("Singer: %s\n", curr->singer);
+            printf("Album: %s\n", curr->album);
+            printf("Duration: %.2f minutes\n", curr->time);
+
+            char command[256];
+            snprintf(command, sizeof(command), "mpg123 -q 'songs/%s.mp3' &", songName);
+            system(command);
+            
+            printf("\nPress 'n' to stop playback.\n");
+            char c = getchar(); 
+            if (c == 'n' || c == 'N') {
+                printf("\n\033[0;37;41mPlayback stopped by user.\033[0m\n");
+                system("killall mpg123");
+                return;
+            }
+        }
+        curr = curr->next;
+    }
+    if(curr == NULL) {
+        printf("\033[0;37;41mSong not found or not playable!\033[0m\n");
+        return;
+    }else{
+        printf("\n\033[0;37;42mPlayback finished!\033[0m\n");
+    }
 }

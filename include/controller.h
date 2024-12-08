@@ -17,4 +17,6 @@ void listFileInPlaylistFolder();
 Playlist* findPlaylistByName(Playlist* head, char playlistName[]);
 Playlist* readPlaylist(struct Playlist* playlist, char playlistName[]);
 char* strip(char* str);
+void playSong(Playlist* playlist, int index, char songName[]);
+double getSongDuration(const char* songName);
 #endif
