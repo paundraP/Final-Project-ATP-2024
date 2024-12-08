@@ -1,6 +1,7 @@
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -Iinclude -static
+LDFLAGS = -lmpg123 -lm
 
 SRC_DIR = src
 BUILD_DIR = build
@@ -24,15 +25,18 @@ all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	@mkdir -p $(BUILD_DIR)
-	$(CC) $(OBJS) -o $(TARGET)
-	@mkdir -p playlist
+	$(CC) $(OBJS) -o $(TARGET) $(LDFLAGS)
+	@mkdir -p playlists
+	@mkdir -p songs
 
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ 
+
 
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -rf songs
 
 .PHONY: all clean run
 
