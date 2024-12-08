@@ -12,18 +12,6 @@
 #include <mpg123.h>
 #include "dto.h"
 
-
-void enableNonBlockingInput() {
-    int flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Get current flags
-    fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK); // Set non-blocking
-}
-
-void disableNonBlockingInput() {
-    int flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Get current flags
-    fcntl(STDIN_FILENO, F_SETFL, flags & ~O_NONBLOCK); // Unset non-blocking
-}
-
-
 void enableNonBlockingInput() {
     int flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Get current flags
     fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK); // Set non-blocking
