@@ -402,9 +402,6 @@ Playlist* dashboardMenu(Playlist* playlist){
                         printf("Enter playlist name: ");
                         fgets(playlistName, sizeof(playlistName), stdin); 
                         playlistName[strcspn(playlistName, "\n")] = '\0';
-                        
-                    
-                        // SpotifyText();
                         strip(playlistName);
                         playlist = readPlaylist(playlist,playlistName);
                     }
