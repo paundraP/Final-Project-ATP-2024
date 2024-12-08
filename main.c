@@ -39,8 +39,8 @@ void printSongInsidePlaylist(Playlist* playlist, int index) {
         int len = strlen(curr->playlistName);
         int width = len > 159 ? len : 159;
         int textLength = strlen(curr->playlistName);
-        int leftPadding = (width - textLength) / 2; // Calculate left padding
-        int rightPadding = width - textLength - leftPadding; // Calculate right padding
+        int leftPadding = (width - textLength) / 2;
+        int rightPadding = width - textLength - leftPadding;
         if(song != NULL){
             printf("+%.*s+\n", 200, "=========================================================================================================================================================================");
             printf("|\033[1;32m");
@@ -314,7 +314,6 @@ Playlist* dashboardMenu(Playlist* playlist){
 }
 
 int main(){
-    // getSongDuration("blue.mp3");
     Playlist* playlists = NULL;
     SpotifyText();
     playlists = dashboardMenu(playlists);

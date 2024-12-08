@@ -7,7 +7,19 @@
 #include <unistd.h> 
 #include <termios.h>
 #include <fcntl.h> 
+#include <fcntl.h>
 #include "dto.h"
+
+
+void enableNonBlockingInput() {
+    int flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Get current flags
+    fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK); // Set non-blocking
+}
+
+void disableNonBlockingInput() {
+    int flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Get current flags
+    fcntl(STDIN_FILENO, F_SETFL, flags & ~O_NONBLOCK); // Unset non-blocking
+}
 
 char* strip(char* str) {
     char* start = str;
@@ -346,6 +358,37 @@ int playable(char songName[]){
     return 0;
 }
 
+int playProgressBar(int totalSeconds) {
+    const int progressBarWidth = 100;
+    
+    printf("\n\n\t\t\tSong Progress:\n\n");
+    fflush(stdout);
+
+    enableNonBlockingInput();
+
+    for (int elapsed = 0; elapsed <= totalSeconds; elapsed++) {
+        int c = getchar();
+        if (c != EOF) { // Check if a key is pressed
+            if (c == '\n') {
+                disableNonBlockingInput(); // Restore normal input mode
+                printf("\n\t\t\tProgress interrupted.\n");
+                return 0;
+            }
+        }
+        int progress = (progressBarWidth * elapsed) / totalSeconds; 
+        printf("\r\t\t\t[");
+        for (int i = 0; i < progress; i++) 
+            printf("#");
+        for (int i = progress; i < progressBarWidth; i++) 
+            printf(" ");
+        printf("] %3d%%", (progress * 100) / progressBarWidth);
+        
+        fflush(stdout);
+        sleep(1);
+    }
+    return 1;
+}
+
 void playSong(Playlist* playlist, int index, char songName[]) {
     Playlist* temp = findPlaylistByIndex(playlist, index);
     if (temp == NULL) {
@@ -365,12 +408,15 @@ void playSong(Playlist* playlist, int index, char songName[]) {
             char command[256];
             snprintf(command, sizeof(command), "mpg123 -q 'songs/%s.mp3' &", songName);
             system(command);
-            
+            int duration = (int)(curr->time * 60) + 1;
+            printf("%d", duration);
             printf("\nPress 'n' to stop playback.\n");
-            char c = getchar(); 
-            if (c == 'n' || c == 'N') {
+            if(playProgressBar(duration) == 1){
+                printf("Song Complete!\n");
+                return;
+            }else{
                 printf("\n\033[0;37;41mPlayback stopped by user.\033[0m\n");
-                system("killall mpg123");
+                system("killall mpg123"); 
                 return;
             }
         }

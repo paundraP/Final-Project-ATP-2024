@@ -1,0 +1,2 @@
+title, singer, album, duration
+blue, pujo, blue, 3.34
