@@ -4,10 +4,12 @@
 #include <dirent.h>
 #include <ctype.h>
 #include <time.h>
-#include <unistd.h> 
+#include <unistd.h>
+#include <math.h>
 #include <termios.h>
 #include <fcntl.h> 
 #include "dto.h"
+#include "mpg123.h"
 
 char* strip(char* str) {
     char* start = str;
@@ -360,6 +362,35 @@ int playable(char songName[]){
     return 0;
 }
 
+char* escape(char* str) {
+    char *escStr;
+    int i,
+        count = strlen(str),
+            ptr_size = count+3;
+
+    escStr = (char *) calloc(ptr_size, sizeof(char));
+    if (escStr == NULL) {
+        return NULL;
+    }
+    sprintf(escStr, "'");
+
+    for(i=0; i<count; i++) {
+        if (str[i] == '\'') {
+                    ptr_size += 3;
+            escStr = (char *) realloc(escStr,ptr_size * sizeof(char));
+            if (escStr == NULL) {
+                return NULL;
+            }
+            sprintf(escStr, "%s'\\''", escStr);
+        } else {
+            sprintf(escStr, "%s%c", escStr, str[i]);
+        }
+    }
+
+    sprintf(escStr, "%s%c", escStr, '\'');
+    return escStr;
+}
+
 void playSong(Playlist* playlist, int index, char songName[]) {
     Playlist* temp = findPlaylistByIndex(playlist, index);
     if (temp == NULL) {
@@ -378,6 +409,7 @@ void playSong(Playlist* playlist, int index, char songName[]) {
             printf("Duration: %.2f minutes\n", curr->time);
 
             char command[256];
+            char* songName=escape(songName);
             snprintf(command, sizeof(command), "mpg123 -q 'songs/%s.mp3' &", songName);
             system(command);
             
@@ -398,3 +430,31 @@ void playSong(Playlist* playlist, int index, char songName[]) {
         printf("\n\033[0;37;42mPlayback finished!\033[0m\n");
     }
 }
+
+
+float getSongDuration(char filename[]){
+    mpg123_init();
+    mpg123_handle *mh = mpg123_new(NULL, NULL);
+    
+    if (mpg123_open(mh, filename) != MPG123_OK) {
+        printf("Gagal membuka file MP3\n");
+        return -1;
+    }
+
+    long rate;
+    int channels, encoding;
+    mpg123_getformat(mh, &rate, &channels, &encoding);
+    
+    off_t samples = mpg123_length(mh);
+    float duration = (float)samples / rate;
+    // duration =round(duration);
+    duration = ((int)(duration * 100 + 0.5)) / 100.0f;
+
+
+    mpg123_close(mh);
+    mpg123_delete(mh);
+    mpg123_exit();
+
+    return duration;
+}
+
