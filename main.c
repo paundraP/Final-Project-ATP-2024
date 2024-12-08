@@ -59,8 +59,8 @@ void printPlaylist(Playlist* playlist) {
 }
 
 Playlist* playlistMenu(Playlist* playlist) {
-    char choice;
-    char title[50], singer[50], album[50], remove[50], play[50], url[256], status[20], command[256], path[64];
+    char choice, extra;
+    char title[50], singer[50], album[50], remove[50], play[50], url[256], status[20], command[256], path[50];
     float duration;
     int idx, idxtoremove, idxtoplay;
 
@@ -137,6 +137,14 @@ Playlist* playlistMenu(Playlist* playlist) {
                             album[strcspn(album, "\n")] = '\0';
                         }
 
+                        printf("Enter the duration of the song to add with format (0.00): ");
+                        if (scanf("%f%c", &duration, &extra) == 2 && extra == '\n');
+                        else {
+                            printf("\n\033[0;37;41mInvalid input. must be a float.\033[0m\n");
+                            while ((extra = getchar()) != '\n' && extra != EOF);
+                            break;
+                        }
+
                         printf("Enter the youtube url of the song to add \n(If filled, the music will be available to play): ");
                         fgets(url, sizeof(url), stdin); 
                         url[strcspn(url, "\n")] = '\0';
@@ -145,13 +153,12 @@ Playlist* playlistMenu(Playlist* playlist) {
                             strcpy(url, "-");
                             url[strcspn(url, "\n")] = '\0';
                         }else{                         
-                            printf("processing download song from youtube url...\n");   
-                            // char* songName = escape(title);
-                            snprintf(path, sizeof(path), "songs/%s.mp3",title );
-                            char* songName = escape(path);
+                            printf("processing download song from youtube url...");   
+                            char* songName = escape(title);
                             char* link = escape(url);
-                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o %s %s", songName,link);
+                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o './songs/%s.mp3' %s", songName,link);
                             system(command);
+                            snprintf(path, sizeof(path),"./songs/%s.mp3",title);
                             duration = getSongDuration(path);
                             if(duration >0.00){
                                 strcpy(status, "Available to play");

@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include "mpg123.h"
 #include "dto.h"
-#include <sys/wait.h>
 
 void SpotifyText(){
     printf("\033[1;32m"); // Set text color to bright green
