@@ -222,9 +222,7 @@ Playlist* playlistMenu(Playlist* playlist) {
                     SpotifyText();
                     printPlaylist(playlist);
                     printf("enter the number of playlist that contains the song you want to play: ");
-                    // scanf(" %d", &idxtoplay);
-                    // getchar();
-                    if(scanf(" %d",&idxtoplay)){
+                    if(scanf("%d",&idxtoplay)){
                         getchar();
                         Playlist* curr=findPlaylistByIndex(playlist,idxtoplay);
                         if(curr == NULL){
