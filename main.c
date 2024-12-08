@@ -137,14 +137,6 @@ Playlist* playlistMenu(Playlist* playlist) {
                             album[strcspn(album, "\n")] = '\0';
                         }
 
-                        printf("Enter the duration of the song to add with format (0.00): ");
-                        if (scanf("%f%c", &duration, &extra) == 2 && extra == '\n');
-                        else {
-                            printf("\n\033[0;37;41mInvalid input. must be a float.\033[0m\n");
-                            while ((extra = getchar()) != '\n' && extra != EOF);
-                            break;
-                        }
-
                         printf("Enter the youtube url of the song to add \n(If filled, the music will be available to play): ");
                         fgets(url, sizeof(url), stdin); 
                         url[strcspn(url, "\n")] = '\0';

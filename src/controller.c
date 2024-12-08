@@ -13,6 +13,7 @@
 #include "dto.h"
 #include "mpg123.h"
 #include "dto.h"
+#include "mpg123.h"
 
 void SpotifyText(){
     printf("\033[1;32m"); // Set text color to bright green
@@ -518,6 +519,35 @@ int playable(char songName[]){
     }
     closedir(dir);
     return 0;
+}
+
+char* escape(char* str) {
+    char *escStr;
+    int i,
+        count = strlen(str),
+            ptr_size = count+3;
+
+    escStr = (char *) calloc(ptr_size, sizeof(char));
+    if (escStr == NULL) {
+        return NULL;
+    }
+    sprintf(escStr, "'");
+
+    for(i=0; i<count; i++) {
+        if (str[i] == '\'') {
+                    ptr_size += 3;
+            escStr = (char *) realloc(escStr,ptr_size * sizeof(char));
+            if (escStr == NULL) {
+                return NULL;
+            }
+            sprintf(escStr, "%s'\\''", escStr);
+        } else {
+            sprintf(escStr, "%s%c", escStr, str[i]);
+        }
+    }
+
+    sprintf(escStr, "%s%c", escStr, '\'');
+    return escStr;
 }
 
 int playProgressBar(int totalSeconds) {
