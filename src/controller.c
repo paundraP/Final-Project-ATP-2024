@@ -75,6 +75,67 @@ char* escape(char* str) {
     return escStr;
 }
 
+void SpotifyText(){
+    printf("\033[1;32m"); // Set text color to bright green
+    printf("\n          ██████████                                                                            ████████████████████████████   ████████████   ");
+    printf("\n        ██████████████████                                                                      ████████████████████████████   ████████████   ");
+    printf("\n     ████████████████████████                                                                   ████████████████████████████   ████████████   ");
+    printf("\n    ██████████████████████████                                                                  ████████████████████████████   ████████████   ");
+    printf("\n  ██████████████████████████████                                                                                ████████████                  ");
+    printf("\n █████                  █████████        █████████                            ████  ███         ████████████    ████████████                  ");
+    printf("\n █████      █████           █████       ███    ███                                  ███         ████████████    ████████████                  ");
+    printf("\n█████████████████████████    █████      ███         ███ ██████     ████████    ███ ████████     ████████████    ████████████                  ");
+    printf("\n███████               ████████████      ████████    ████    ████  ████   ████  ███  ████        ████████████    ████████████                  ");
+    printf("\n███████   ████████        ████████         ███████  ███      ███ ███      ████ ███  ███         ████████████    ████████████                  ");
+    printf("\n████████████████████████   ███████              ███ ███      ███ ███      ████ ███  ███         ████████████    ████████████                  ");
+    printf("\n ██████               ███████████       ███     ███ ████    ████  ███    ████  ███  ████        ████████████    ████████████                  ");
+    printf("\n ████████████████████    ████████       ██████████  ███████████    █████████   ███   █████      ████████████    ████████████                  ");
+    printf("\n  ██████████████████████████████                    ███                                         ████████████    ████████████                  ");
+    printf("\n    ██████████████████████████                      ███                                         ████████████    ████████████                  ");
+    printf("\n     ████████████████████████                                                                   ████████████    ████████████                  ");
+    printf("\n        ██████████████████                                                                      ████████████    ████████████                  ");
+    printf("\n           ████████████                                                                         ████████████    ████████████                  ");
+    printf("\n"); 
+    printf("\n     SUPPORT FOR LINUX/UNIX");
+    printf("\n\n\n\n");
+    printf("\033[0m"); // Reset text color to default
+
+}
+
+char* escape(char* str) {
+    char *escStr;
+    int i,
+        count = strlen(str),
+        ptr_size = count + 3; // Initial size with extra room for double quotes
+
+    escStr = (char *) calloc(ptr_size, sizeof(char));
+    if (escStr == NULL) {
+        return NULL;
+    }
+    sprintf(escStr, "\""); // Start with double quote
+
+    for(i = 0; i < count; i++) {
+        if (str[i] == '"') {
+            ptr_size += 2; // Increase size for escape sequence (\")
+            escStr = (char *) realloc(escStr, ptr_size * sizeof(char));
+            if (escStr == NULL) {
+                return NULL;
+            }
+            sprintf(escStr, "%s\\\"", escStr); // Escape double quote
+        } else {
+            ptr_size += 1; // Increase size for one character
+            escStr = (char *) realloc(escStr, ptr_size * sizeof(char));
+            if (escStr == NULL) {
+                return NULL;
+            }
+            sprintf(escStr, "%s%c", escStr, str[i]); // Add regular character
+        }
+    }
+
+    sprintf(escStr, "%s\"", escStr); // End with double quote
+    return escStr;
+}
+
 bool isEmptyOrSpaces(const char *str) {
     while (*str) {
         if (!isspace((unsigned char)*str)) return false; // If a non-space character is found, return false
@@ -538,34 +599,6 @@ void playProgressBar(int totalSeconds) {
     }
 }
 
-char* escape(char* str) {
-    char *escStr;
-    int i,
-        count = strlen(str),
-            ptr_size = count+3;
-
-    escStr = (char *) calloc(ptr_size, sizeof(char));
-    if (escStr == NULL) {
-        return NULL;
-    }
-    sprintf(escStr, "'");
-
-    for(i=0; i<count; i++) {
-        if (str[i] == '\'') {
-                    ptr_size += 3;
-            escStr = (char *) realloc(escStr,ptr_size * sizeof(char));
-            if (escStr == NULL) {
-                return NULL;
-            }
-            sprintf(escStr, "%s'\\''", escStr);
-        } else {
-            sprintf(escStr, "%s%c", escStr, str[i]);
-        }
-    }
-
-    sprintf(escStr, "%s%c", escStr, '\'');
-    return escStr;
-}
 
 
 void playProgressBar(int totalSeconds) {

@@ -146,11 +146,12 @@ Playlist* playlistMenu(Playlist* playlist) {
                             url[strcspn(url, "\n")] = '\0';
                         }else{                         
                             printf("processing download song from youtube url...\n");   
-                            char* songName = escape(title);
+                            // char* songName = escape(title);
+                            snprintf(path, sizeof(path), "songs/%s.mp3",title );
+                            char* songName = escape(path);
                             char* link = escape(url);
-                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o 'songs/%s.mp3' %s", songName,link);
+                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o %s %s", songName,link);
                             system(command);
-                            snprintf(path, sizeof(path), "./songs/%s.mp3", title);
                             duration = getSongDuration(path);
                             if(duration >0.00){
                                 strcpy(status, "Available to play");
