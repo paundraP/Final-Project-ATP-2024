@@ -7,9 +7,9 @@
 #include <unistd.h>
 #include <math.h>
 #include <termios.h>
-#include <fcntl.h> 
 #include <fcntl.h>
-#include <mpg123.h>
+#include <stdlib.h>
+#include "mpg123.h"
 #include "dto.h"
 
 void enableNonBlockingInput() {
@@ -247,7 +247,7 @@ void savePlaylist(Playlist* playlist, int index){
     }
     FILE *fptr;
     char filename[113];
-    snprintf(filename, sizeof(filename), "playlist/%s.txt", curr->playlistName);
+    snprintf(filename, sizeof(filename), "playlists/%s.txt", curr->playlistName);
 
     fptr = fopen(filename, "w");
     fprintf(fptr, "title, singer, album, duration, source, status\n");
@@ -314,7 +314,7 @@ Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
     char filePath[50];
 
 
-    sprintf(filePath, "playlist/%s.txt",  playlistName);
+    sprintf(filePath, "playlists/%s.txt",  playlistName);
     fptr = fopen(filePath, "r");
 
     if (fptr == NULL) {
@@ -373,7 +373,7 @@ int playable(char songName[]){
     return 0;
 }
 
-int playProgressBar(int totalSeconds) {
+void playProgressBar(int totalSeconds) {
     const int progressBarWidth = 100;
     
     printf("\n\n\t\t\tSong Progress:\n\n");
@@ -383,11 +383,11 @@ int playProgressBar(int totalSeconds) {
 
     for (int elapsed = 0; elapsed <= totalSeconds; elapsed++) {
         int c = getchar();
-        if (c != EOF) { // Check if a key is pressed
+        if (c != EOF) { 
             if (c == '\n') {
-                disableNonBlockingInput(); // Restore normal input mode
+                disableNonBlockingInput();
                 printf("\n\t\t\tProgress interrupted.\n");
-                return 0;
+                return;
             }
         }
         int progress = (progressBarWidth * elapsed) / totalSeconds; 
@@ -401,7 +401,6 @@ int playProgressBar(int totalSeconds) {
         fflush(stdout);
         sleep(1);
     }
-    return 1;
 }
 
 char* escape(char* str) {
@@ -433,36 +432,6 @@ char* escape(char* str) {
     return escStr;
 }
 
-int playProgressBar(int totalSeconds) {
-    const int progressBarWidth = 100;
-    
-    printf("\n\n\t\t\tSong Progress:\n\n");
-    fflush(stdout);
-
-    enableNonBlockingInput();
-
-    for (int elapsed = 0; elapsed <= totalSeconds; elapsed++) {
-        int c = getchar();
-        if (c != EOF) { // Check if a key is pressed
-            if (c == '\n') {
-                disableNonBlockingInput(); // Restore normal input mode
-                printf("\n\t\t\tProgress interrupted.\n");
-                return 0;
-            }
-        }
-        int progress = (progressBarWidth * elapsed) / totalSeconds; 
-        printf("\r\t\t\t[");
-        for (int i = 0; i < progress; i++) 
-            printf("#");
-        for (int i = progress; i < progressBarWidth; i++) 
-            printf(" ");
-        printf("] %3d%%", (progress * 100) / progressBarWidth);
-        
-        fflush(stdout);
-        sleep(1);
-    }
-    return 1;
-}
 
 void playSong(Playlist* playlist, int index, char songName[]) {
     Playlist* temp = findPlaylistByIndex(playlist, index);
@@ -474,36 +443,45 @@ void playSong(Playlist* playlist, int index, char songName[]) {
     Song* curr = temp->song;
     while (curr != NULL) {
         if (strcmp(curr->title, songName) == 0 && playable(songName)) {
-            printf("\033[0;37;42mNow playing:\033[0m\n");
-            printf("Source: %s\n", curr->url);
-            printf("Title: %s\n", curr->title);
-            printf("Singer: %s\n", curr->singer);
-            printf("Album: %s\n", curr->album);
-            printf("Duration: %.2f minutes\n", curr->time);
+            int minutes = (int)curr->time / 60;
+            int seconds = (int)curr->time % 60;
+
+            printf("\033[0;37;42m+-----------------------------------------------------------+\033[0m\n");
+            printf("\033[0;37;42m|                       Now playing:                        |\033[0m\n");
+            printf("\033[0;37;42m+-----------------------------------------------------------+\033[0m\n");
+            printf("| Source: %s\n", curr->url);
+            printf("| Title: %s\n", curr->title);
+            printf("| Singer: %s\n", curr->singer);
+            printf("| Album: %s\n", curr->album);
+            printf("| Duration: %2d min %2d sec\n", minutes, seconds);
+            printf("\033[0;37;42m+-----------------------------------------------------------+\033[0m\n");
 
             char command[256];
-            char* songName=escape(songName);
-            snprintf(command, sizeof(command), "mpg123 -q 'songs/%s.mp3' &", songName);
-            system(command);
-            int duration = (int)(curr->time * 60) + 1;
-            printf("%d", duration);
-            printf("\nPress 'n' to stop playback.\n");
-            if(playProgressBar(duration) == 1){
-                printf("Song Complete!\n");
-                return;
-            }else{
-                printf("\n\033[0;37;41mPlayback stopped by user.\033[0m\n");
-                system("killall mpg123"); 
+            char* songNamewithEscape = escape(songName);
+            int duration = (int)curr->time + 1;
+
+            snprintf(command, sizeof(command), "mpg123 -q 'songs/%s.mp3'", songNamewithEscape);
+
+            pid_t pid = fork();
+            if (pid == 0) {
+                system(command);
+                _exit(0); 
+            } else if (pid > 0) {
+                printf("\nPress 'q' + 'enter' to stop playback.\n");
+                playProgressBar(duration);
+                wait(NULL);
+            } else {
+                perror("fork failed");
                 return;
             }
+            printf("Song Completed\n");
+            return;
         }
         curr = curr->next;
     }
-    if(curr == NULL) {
+
+    if (curr == NULL) {
         printf("\033[0;37;41mSong not found or not playable!\033[0m\n");
-        return;
-    }else{
-        printf("\n\033[0;37;42mPlayback finished!\033[0m\n");
     }
 }
 
