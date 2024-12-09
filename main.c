@@ -6,30 +6,7 @@
 #include "sorting.h"
 
 #define MAX_LEN 128
-void SpotifyText(){
-    printf("\033[1;32m"); // Set text color to bright green
-    printf("\n          ██████████                                                                            ████████████████████████████   ████████████   ");
-    printf("\n        ██████████████████                                                                      ████████████████████████████   ████████████   ");
-    printf("\n     ████████████████████████                                                                   ████████████████████████████   ████████████   ");
-    printf("\n    ██████████████████████████                                                                  ████████████████████████████   ████████████   ");
-    printf("\n  ██████████████████████████████                                                                                ████████████                  ");
-    printf("\n █████                  █████████        █████████                            ████  ███         ████████████    ████████████                  ");
-    printf("\n █████      █████           █████       ███    ███                                  ███         ████████████    ████████████                  ");
-    printf("\n█████████████████████████    █████      ███         ███ ██████     ████████    ███ ████████     ████████████    ████████████                  ");
-    printf("\n███████               ████████████      ████████    ████    ████  ████   ████  ███  ████        ████████████    ████████████                  ");
-    printf("\n███████   ████████        ████████         ███████  ███      ███ ███      ████ ███  ███         ████████████    ████████████                  ");
-    printf("\n████████████████████████   ███████              ███ ███      ███ ███      ████ ███  ███         ████████████    ████████████                  ");
-    printf("\n ██████               ███████████       ███     ███ ████    ████  ███    ████  ███  ████        ████████████    ████████████                  ");
-    printf("\n ████████████████████    ████████       ██████████  ███████████    █████████   ███   █████      ████████████    ████████████                  ");
-    printf("\n  ██████████████████████████████                    ███                                         ████████████    ████████████                  ");
-    printf("\n    ██████████████████████████                      ███                                         ████████████    ████████████                  ");
-    printf("\n     ████████████████████████                                                                   ████████████    ████████████                  ");
-    printf("\n        ██████████████████                                                                      ████████████    ████████████                  ");
-    printf("\n           ████████████                                                                         ████████████    ████████████                  ");
-    printf("\n\n\n\n");
-    printf("\033[0m"); // Reset text color to default
 
-}
 
 void printSongInsidePlaylist(Playlist* playlist, int index) {
     Playlist* curr = findPlaylistByIndex(playlist, index);
@@ -169,11 +146,12 @@ Playlist* playlistMenu(Playlist* playlist) {
                             url[strcspn(url, "\n")] = '\0';
                         }else{                         
                             printf("processing download song from youtube url...\n");   
-                            char* songName = escape(title);
+                            // char* songName = escape(title);
+                            snprintf(path, sizeof(path), "songs/%s.mp3",title );
+                            char* songName = escape(path);
                             char* link = escape(url);
-                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o 'songs/%s.mp3' %s", songName,link);
+                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o %s %s", songName,link);
                             system(command);
-                            snprintf(path, sizeof(path), "./songs/%s.mp3", title);
                             duration = getSongDuration(path);
                             if(duration >0.00){
                                 strcpy(status, "Available to play");
@@ -316,6 +294,10 @@ Playlist* dashboardMenu(Playlist* playlist){
                     printf("Enter playlist name: ");
                     fgets(playlistName, sizeof(playlistName), stdin); 
                     playlistName[strcspn(playlistName, "\n")] = '\0';
+                    if(playlistName[0] == '\0'){
+                            printf("\n\033[0;37;41mPlaylist name is required.\033[0m\n");
+                            break;
+                    }
                     strip(playlistName);
                     playlist = addNewPlaylist(playlist, playlistName);                
                     break;
@@ -397,6 +379,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                         system("clear");
                         SpotifyText();
                         playlist = readPlaylist(playlist,playlistName);
+                        // sortByTitle(playlist);
                         // }else{
                             // 
                             // SpotifyText();

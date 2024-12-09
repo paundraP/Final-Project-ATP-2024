@@ -14,6 +14,67 @@
 #include "mpg123.h"
 #include "dto.h"
 
+void SpotifyText(){
+    printf("\033[1;32m"); // Set text color to bright green
+    printf("\n          ██████████                                                                            ████████████████████████████   ████████████   ");
+    printf("\n        ██████████████████                                                                      ████████████████████████████   ████████████   ");
+    printf("\n     ████████████████████████                                                                   ████████████████████████████   ████████████   ");
+    printf("\n    ██████████████████████████                                                                  ████████████████████████████   ████████████   ");
+    printf("\n  ██████████████████████████████                                                                                ████████████                  ");
+    printf("\n █████                  █████████        █████████                            ████  ███         ████████████    ████████████                  ");
+    printf("\n █████      █████           █████       ███    ███                                  ███         ████████████    ████████████                  ");
+    printf("\n█████████████████████████    █████      ███         ███ ██████     ████████    ███ ████████     ████████████    ████████████                  ");
+    printf("\n███████               ████████████      ████████    ████    ████  ████   ████  ███  ████        ████████████    ████████████                  ");
+    printf("\n███████   ████████        ████████         ███████  ███      ███ ███      ████ ███  ███         ████████████    ████████████                  ");
+    printf("\n████████████████████████   ███████              ███ ███      ███ ███      ████ ███  ███         ████████████    ████████████                  ");
+    printf("\n ██████               ███████████       ███     ███ ████    ████  ███    ████  ███  ████        ████████████    ████████████                  ");
+    printf("\n ████████████████████    ████████       ██████████  ███████████    █████████   ███   █████      ████████████    ████████████                  ");
+    printf("\n  ██████████████████████████████                    ███                                         ████████████    ████████████                  ");
+    printf("\n    ██████████████████████████                      ███                                         ████████████    ████████████                  ");
+    printf("\n     ████████████████████████                                                                   ████████████    ████████████                  ");
+    printf("\n        ██████████████████                                                                      ████████████    ████████████                  ");
+    printf("\n           ████████████                                                                         ████████████    ████████████                  ");
+    printf("\n"); 
+    printf("\n     SUPPORT FOR LINUX/UNIX");
+    printf("\n\n\n\n");
+    printf("\033[0m"); // Reset text color to default
+
+}
+
+char* escape(char* str) {
+    char *escStr;
+    int i,
+        count = strlen(str),
+        ptr_size = count + 3; // Initial size with extra room for double quotes
+
+    escStr = (char *) calloc(ptr_size, sizeof(char));
+    if (escStr == NULL) {
+        return NULL;
+    }
+    sprintf(escStr, "\""); // Start with double quote
+
+    for(i = 0; i < count; i++) {
+        if (str[i] == '"') {
+            ptr_size += 2; // Increase size for escape sequence (\")
+            escStr = (char *) realloc(escStr, ptr_size * sizeof(char));
+            if (escStr == NULL) {
+                return NULL;
+            }
+            sprintf(escStr, "%s\\\"", escStr); // Escape double quote
+        } else {
+            ptr_size += 1; // Increase size for one character
+            escStr = (char *) realloc(escStr, ptr_size * sizeof(char));
+            if (escStr == NULL) {
+                return NULL;
+            }
+            sprintf(escStr, "%s%c", escStr, str[i]); // Add regular character
+        }
+    }
+
+    sprintf(escStr, "%s\"", escStr); // End with double quote
+    return escStr;
+}
+
 bool isEmptyOrSpaces(const char *str) {
     while (*str) {
         if (!isspace((unsigned char)*str)) return false; // If a non-space character is found, return false
@@ -316,7 +377,7 @@ int listFileInPlaylistFolder(){
 }
 
 Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
-    char title[50], singer[50], album[50], url[256], status[20];
+    char title[50], singer[50], album[50], url[256], status[20], path[64], command[256];
     float duration;
     FILE *fptr;
     char readData[1024];
@@ -332,8 +393,20 @@ Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
         return playlist;
     }
     
-    playlist = addNewPlaylist(playlist,playlistName);
-    playlist = findPlaylistByName(playlist, playlistName);
+    // playlist = addNewPlaylist(playlist,playlistName);
+    // Playlist* targetPlaylist = findPlaylistByName(playlist, playlistName);
+     if (playlistExists(playlist, playlistName)) {                   
+        printf("\n\033[0;37;41mPlaylist with the name '%s' already exists.\033[0m\n\n", playlistName);
+        return playlist;
+    }          
+    struct Playlist* targetPlaylist = createPlaylist(playlistName);                
+    printf("\n\033[0;42mplaylist %s created\033[0m\n\n", playlistName);
+
+
+    if (isSongInPlaylist(targetPlaylist->song, title)) {
+        printf("\n\033[0;37;41mSong '%s' already exists in the playlist '%s'.\033[0m\n", title, targetPlaylist->playlistName);
+        return playlist;
+    }
     int idx=1;
 
     if (fgets(readData, sizeof(readData), fptr)) {
@@ -344,18 +417,49 @@ Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
         readData[strcspn(readData, "\n")] = '\0';
 
         if (sscanf(readData, "%[^,],%[^,],%[^,],%f,%[^,],%[^,]", title, singer, album, &duration, url, status) == 6) {    
-            if (isEmptyOrSpaces(title)) strcpy(title, "unknown");
+            if (isEmptyOrSpaces(title)) {
+                system("clear");
+                SpotifyText();
+                printf("\033[0;37;41mError: Title is empty on line %d. Aborting process (playlist deleted).\033[0m\n", idx);
+                fclose(fptr);
+                // playlist = findPlaylistByName(playlist, playlistName);
+                // free(playlist);
+                return playlist; // Return original playlist, no changes made
+            }
             if (isEmptyOrSpaces(singer)) strcpy(singer, "unknown");
             if (isEmptyOrSpaces(album)) strcpy(album, "unknown");
-            if (isEmptyOrSpaces(url)) strcpy(url, "unknown");
-            if (isEmptyOrSpaces(status)) strcpy(status, "unknown");
+            if (isEmptyOrSpaces(url)) strcpy(url, "-");
+            if (isEmptyOrSpaces(status)) strcpy(status, "Unavailable to play");
 
             strip(title);
             strip(singer);
             strip(album);            
             strip(url);
             strip(status);
-            addSongToPlaylist(playlist, idx, title, singer, album, duration, url, status);
+            // addSongToPlaylist(playlist, idx, title, singer, album, duration, url, status);
+            Song* newSong = createSong(singer, title, album, duration, url, status);
+            if (!targetPlaylist->song) {
+                targetPlaylist->song = newSong;
+            } else {
+                Song* temp = targetPlaylist->song;
+                while (temp->next) {
+                    temp = temp->next;
+                }
+                temp->next = newSong; 
+            }
+
+            if (strcmp(status, "Available to play") == 0 && strcmp(url, "-") != 0) {
+                printf("\nTry download music from %s.......\n",url);   
+                snprintf(path, sizeof(path), "songs/%s.mp3",title );
+                char* songName = escape(path);
+                char* link = escape(url);
+                snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o %s %s", songName,link);
+                system(command);
+                printf("\n\033[0;42mSong '%s' added to playlist '%s' and available to play.\033[0m\n", title, targetPlaylist->playlistName);
+            }else{
+                printf("\n\033[0;42mSong '%s' added to playlist '%s' but unavailable to play.\033[0m\n", title, targetPlaylist->playlistName);
+            }
+
         }else{
             printf("\033[0;37;41mskipping data in line %d error to parse\033[0m",idx);
         }
@@ -363,6 +467,16 @@ Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
     
     fclose(fptr);
     idx++;
+
+    if(playlist == NULL){
+        return targetPlaylist;
+    }
+    Playlist* temp = playlist;
+    while(temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = targetPlaylist;
+
 
     return playlist;
 }
@@ -424,34 +538,6 @@ void playProgressBar(int totalSeconds) {
     }
 }
 
-char* escape(char* str) {
-    char *escStr;
-    int i,
-        count = strlen(str),
-            ptr_size = count+3;
-
-    escStr = (char *) calloc(ptr_size, sizeof(char));
-    if (escStr == NULL) {
-        return NULL;
-    }
-    sprintf(escStr, "'");
-
-    for(i=0; i<count; i++) {
-        if (str[i] == '\'') {
-                    ptr_size += 3;
-            escStr = (char *) realloc(escStr,ptr_size * sizeof(char));
-            if (escStr == NULL) {
-                return NULL;
-            }
-            sprintf(escStr, "%s'\\''", escStr);
-        } else {
-            sprintf(escStr, "%s%c", escStr, str[i]);
-        }
-    }
-
-    sprintf(escStr, "%s%c", escStr, '\'');
-    return escStr;
-}
 
 
 void playSong(Playlist* playlist, int index, char songName[]) {
