@@ -376,12 +376,6 @@ Playlist* dashboardMenu(Playlist* playlist){
                         system("clear");
                         SpotifyText();
                         playlist = readPlaylist(playlist,playlistName);
-                        // sortByTitle(playlist);
-                        // }else{
-                            // 
-                            // SpotifyText();
-                            // printf("\n\033[0;37;41mThe file is not known, or you're mistyping.\033[0m\n");
-                        // }
                     }
                     break;
 
