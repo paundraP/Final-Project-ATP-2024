@@ -6,32 +6,7 @@
 #include "sorting.h"
 
 #define MAX_LEN 128
-void SpotifyText(){
-    printf("\033[1;32m"); // Set text color to bright green
-    printf("\n          ██████████                                                                            ████████████████████████████   ████████████   ");
-    printf("\n        ██████████████████                                                                      ████████████████████████████   ████████████   ");
-    printf("\n     ████████████████████████                                                                   ████████████████████████████   ████████████   ");
-    printf("\n    ██████████████████████████                                                                  ████████████████████████████   ████████████   ");
-    printf("\n  ██████████████████████████████                                                                                ████████████                  ");
-    printf("\n █████                  █████████        █████████                            ████  ███         ████████████    ████████████                  ");
-    printf("\n █████      █████           █████       ███    ███                                  ███         ████████████    ████████████                  ");
-    printf("\n█████████████████████████    █████      ███         ███ ██████     ████████    ███ ████████     ████████████    ████████████                  ");
-    printf("\n███████               ████████████      ████████    ████    ████  ████   ████  ███  ████        ████████████    ████████████                  ");
-    printf("\n███████   ████████        ████████         ███████  ███      ███ ███      ████ ███  ███         ████████████    ████████████                  ");
-    printf("\n████████████████████████   ███████              ███ ███      ███ ███      ████ ███  ███         ████████████    ████████████                  ");
-    printf("\n ██████               ███████████       ███     ███ ████    ████  ███    ████  ███  ████        ████████████    ████████████                  ");
-    printf("\n ████████████████████    ████████       ██████████  ███████████    █████████   ███   █████      ████████████    ████████████                  ");
-    printf("\n  ██████████████████████████████                    ███                                         ████████████    ████████████                  ");
-    printf("\n    ██████████████████████████                      ███                                         ████████████    ████████████                  ");
-    printf("\n     ████████████████████████                                                                   ████████████    ████████████                  ");
-    printf("\n        ██████████████████                                                                      ████████████    ████████████                  ");
-    printf("\n           ████████████                                                                         ████████████    ████████████                  ");
-    printf("\n"); 
-    printf("\n     SUPPORT FOR LINUX/UNIX");
-    printf("\n\n\n\n");
-    printf("\033[0m"); // Reset text color to default
 
-}
 
 void printSongInsidePlaylist(Playlist* playlist, int index) {
     Playlist* curr = findPlaylistByIndex(playlist, index);
@@ -171,11 +146,12 @@ Playlist* playlistMenu(Playlist* playlist) {
                             url[strcspn(url, "\n")] = '\0';
                         }else{                         
                             printf("processing download song from youtube url...\n");   
-                            char* songName = escape(title);
+                            // char* songName = escape(title);
+                            snprintf(path, sizeof(path), "songs/%s.mp3",title );
+                            char* songName = escape(path);
                             char* link = escape(url);
-                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o 'songs/%s.mp3' %s", songName,link);
+                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o %s %s", songName,link);
                             system(command);
-                            snprintf(path, sizeof(path), "./songs/%s.mp3", title);
                             duration = getSongDuration(path);
                             if(duration >0.00){
                                 strcpy(status, "Available to play");
@@ -239,18 +215,35 @@ Playlist* playlistMenu(Playlist* playlist) {
                     SpotifyText();
                     printPlaylist(playlist);
                     printf("enter the number of playlist that contains the song you want to play: ");
-                    scanf(" %d", &idxtoplay);
-                    getchar();
-                    printSongInsidePlaylist(playlist, idxtoplay);
-                    printf("enter the name of the song you want to play: ");
-                    fgets(play, sizeof(play), stdin); 
-                    play[strcspn(play, "\n")] = '\0';
-                    strip(play);
-                    playSong(playlist, idxtoplay, play);
-                    char ch;
-                    if ((ch = getchar()) == '\n') {
-                        break;
+                    // scanf(" %d", &idxtoplay);
+                    // getchar();
+                    if(scanf(" %d",&idxtoplay)){
+                        getchar();
+                        Playlist* curr=findPlaylistByIndex(playlist,idxtoplay);
+                        if(curr == NULL){
+                            printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
+                            break;
+                        }
+
+                        if(curr->song!=NULL){
+                            printSongInsidePlaylist(playlist, idxtoplay);
+                            printf("enter the name of the song you want to play: ");
+                            fgets(play, sizeof(play), stdin); 
+                            play[strcspn(play, "\n")] = '\0';
+                            strip(play);
+                            playSong(playlist, idxtoplay, play);
+                        }else{
+                            printf("\n\033[0;37;41mPlaylist is empty.\033[0m\n"); 
+                        }
+                        
+                    }else{
+                        char ch;
+                        while ((ch = getchar()) != '\n' && ch != EOF) {
+                            continue;
+                        }
+                        printf("\n\033[0;37;41mInvalid number.\033[0m\n");   
                     }
+                    
                     break;
                 case 'e':                           
                     system("clear");
@@ -301,6 +294,10 @@ Playlist* dashboardMenu(Playlist* playlist){
                     printf("Enter playlist name: ");
                     fgets(playlistName, sizeof(playlistName), stdin); 
                     playlistName[strcspn(playlistName, "\n")] = '\0';
+                    if(playlistName[0] == '\0'){
+                            printf("\n\033[0;37;41mPlaylist name is required.\033[0m\n");
+                            break;
+                    }
                     strip(playlistName);
                     playlist = addNewPlaylist(playlist, playlistName);                
                     break;
@@ -327,7 +324,12 @@ Playlist* dashboardMenu(Playlist* playlist){
                         printf("enter the number of the playlist you want to delete: ");                        
                         if(scanf(" %d",&idxtoremove)){
                             getchar();
-                            playlist = deletePlaylist(playlist, idxtoremove);
+                            if(findPlaylistByIndex(playlist,idxtoremove)){
+                                playlist = deletePlaylist(playlist, idxtoremove);                                
+                            }else{
+                                printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
+                                break;
+                            }
                         }else{
                             char ch;
                             while ((ch = getchar()) != '\n' && ch != EOF) {
@@ -339,8 +341,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                     }
                     break;
 
-                case 'd':
-                       
+                case 'd':                       
                     system("clear");
                     SpotifyText();
                     if(playlist == NULL){
@@ -350,7 +351,12 @@ Playlist* dashboardMenu(Playlist* playlist){
                         printf("Which playlist you want to save? (choose number of playlist): ");
                         if(scanf(" %d", &save)){
                             getchar();
-                            savePlaylist(playlist, save);
+                            if(findPlaylistByIndex(playlist,save)){
+                                savePlaylist(playlist, save);
+                            }else{
+                                printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
+                                break;
+                            }
                         }else{
                             char ch;
                             while ((ch = getchar()) != '\n' && ch != EOF) {
@@ -369,7 +375,16 @@ Playlist* dashboardMenu(Playlist* playlist){
                         fgets(playlistName, sizeof(playlistName), stdin); 
                         playlistName[strcspn(playlistName, "\n")] = '\0';
                         strip(playlistName);
+                        // if(){
+                        system("clear");
+                        SpotifyText();
                         playlist = readPlaylist(playlist,playlistName);
+                        // sortByTitle(playlist);
+                        // }else{
+                            // 
+                            // SpotifyText();
+                            // printf("\n\033[0;37;41mThe file is not known, or you're mistyping.\033[0m\n");
+                        // }
                     }
                     break;
 
