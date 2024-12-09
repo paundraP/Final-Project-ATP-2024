@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include "mpg123.h"
 #include "dto.h"
+#include <sys/wait.h>
 
 void enableNonBlockingInput() {
     int flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Get current flags

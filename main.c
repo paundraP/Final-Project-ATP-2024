@@ -26,6 +26,8 @@ void SpotifyText(){
     printf("\n     ████████████████████████                                                                   ████████████    ████████████                  ");
     printf("\n        ██████████████████                                                                      ████████████    ████████████                  ");
     printf("\n           ████████████                                                                         ████████████    ████████████                  ");
+    printf("\n"); 
+    printf("\n     SUPPORT FOR LINUX/UNIX");
     printf("\n\n\n\n");
     printf("\033[0m"); // Reset text color to default
 
