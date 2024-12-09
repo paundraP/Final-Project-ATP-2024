@@ -373,7 +373,6 @@ Playlist* dashboardMenu(Playlist* playlist){
                         fgets(playlistName, sizeof(playlistName), stdin); 
                         playlistName[strcspn(playlistName, "\n")] = '\0';
                         strip(playlistName);
-                        // if(){
                         system("clear");
                         SpotifyText();
                         playlist = readPlaylist(playlist,playlistName);
