@@ -11,7 +11,7 @@
 #include <termios.h>
 #include <fcntl.h> 
 #include <fcntl.h>
-#include "mpg123.h"
+#include <mpg123.h>
 #include "dto.h"
 
 void SpotifyText(){
@@ -509,7 +509,7 @@ int playable(char songName[]){
     return 0;
 }
 
-int playProgressBar(int totalSeconds) {
+void playProgressBar(int totalSeconds) {
     const int progressBarWidth = 100;
     
     printf("\n\n\t\t\tSong Progress:\n\n");
@@ -519,11 +519,11 @@ int playProgressBar(int totalSeconds) {
 
     for (int elapsed = 0; elapsed <= totalSeconds; elapsed++) {
         int c = getchar();
-        if (c != EOF) { // Check if a key is pressed
+        if (c != EOF) { 
             if (c == '\n') {
-                disableNonBlockingInput(); // Restore normal input mode
+                disableNonBlockingInput();
                 printf("\n\t\t\tProgress interrupted.\n");
-                return 0;
+                return;
             }
         }
         int progress = (progressBarWidth * elapsed) / totalSeconds; 
@@ -537,7 +537,6 @@ int playProgressBar(int totalSeconds) {
         fflush(stdout);
         sleep(1);
     }
-    return 1;
 }
 
 char* escape(char* str) {
@@ -569,36 +568,6 @@ char* escape(char* str) {
     return escStr;
 }
 
-int playProgressBar(int totalSeconds) {
-    const int progressBarWidth = 100;
-    
-    printf("\n\n\t\t\tSong Progress:\n\n");
-    fflush(stdout);
-
-    enableNonBlockingInput();
-
-    for (int elapsed = 0; elapsed <= totalSeconds; elapsed++) {
-        int c = getchar();
-        if (c != EOF) { // Check if a key is pressed
-            if (c == '\n') {
-                disableNonBlockingInput(); // Restore normal input mode
-                printf("\n\t\t\tProgress interrupted.\n");
-                return 0;
-            }
-        }
-        int progress = (progressBarWidth * elapsed) / totalSeconds; 
-        printf("\r\t\t\t[");
-        for (int i = 0; i < progress; i++) 
-            printf("#");
-        for (int i = progress; i < progressBarWidth; i++) 
-            printf(" ");
-        printf("] %3d%%", (progress * 100) / progressBarWidth);
-        
-        fflush(stdout);
-        sleep(1);
-    }
-    return 1;
-}
 
 void playProgressBar(int totalSeconds) {
     const int progressBarWidth = 100;
@@ -645,21 +614,21 @@ void playSong(Playlist* playlist, int index, char songName[]) {
             int minutes = (int)curr->time / 60;
             int seconds = (int)curr->time % 60;
 
-            printf("+-----------------------------------------------------------+\n");
-            printf("|                       Now playing:                        |\n");
-            printf("+-----------------------------------------------------------+\n");
+            printf("\033[0;37;42m+-----------------------------------------------------------+\033[0m\n");
+            printf("\033[0;37;42m|                       Now playing:                        |\033[0m\n");
+            printf("\033[0;37;42m+-----------------------------------------------------------+\033[0m\n");
             printf("| Source: %s\n", curr->url);
             printf("| Title: %s\n", curr->title);
             printf("| Singer: %s\n", curr->singer);
             printf("| Album: %s\n", curr->album);
             printf("| Duration: %2d min %2d sec\n", minutes, seconds);
-            printf("+-----------------------------------------------------------+\n");
+            printf("\033[0;37;42m+-----------------------------------------------------------+\033[0m\n");
 
             char command[256];
-            //char* songNamewithEscape = escape(songName);
+            char* songNamewithEscape = escape(songName);
             int duration = (int)curr->time + 1;
 
-            snprintf(command, sizeof(command), "mpg123 -q 'songs/%s.mp3'", songName);
+            snprintf(command, sizeof(command), "mpg123 -q 'songs/%s.mp3'", songNamewithEscape);
 
             pid_t pid = fork();
             if (pid == 0) {
@@ -673,6 +642,8 @@ void playSong(Playlist* playlist, int index, char songName[]) {
                 perror("fork failed");
                 return;
             }
+            printf("Song Completed\n");
+            return;
             printf("Song Completed\n");
             return;
         }

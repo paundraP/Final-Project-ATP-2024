@@ -59,8 +59,8 @@ void printPlaylist(Playlist* playlist) {
 }
 
 Playlist* playlistMenu(Playlist* playlist) {
-    char choice, extra;
-    char title[50], singer[50], album[50], remove[50], play[50], url[256], status[20], command[256], path[50];
+    char choice;
+    char title[50], singer[50], album[50], remove[50], play[50], url[256], status[20], command[256], path[64];
     float duration;
     int idx, idxtoremove, idxtoplay;
 
@@ -145,12 +145,12 @@ Playlist* playlistMenu(Playlist* playlist) {
                             strcpy(url, "-");
                             url[strcspn(url, "\n")] = '\0';
                         }else{                         
-                            printf("processing download song from youtube url...");   
+                            printf("processing download song from youtube url...\n");   
                             char* songName = escape(title);
                             char* link = escape(url);
-                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o './songs/%s.mp3' %s", songName,link);
+                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o 'songs/%s.mp3' %s", songName,link);
                             system(command);
-                            snprintf(path, sizeof(path),"./songs/%s.mp3",title);
+                            snprintf(path, sizeof(path), "./songs/%s.mp3", title);
                             duration = getSongDuration(path);
                             if(duration >0.00){
                                 strcpy(status, "Available to play");
