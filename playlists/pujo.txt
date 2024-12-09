@@ -1,0 +1,5 @@
+title, singer, album, duration, source, status
+lampu kuning,   ,  Nonfiksi, 0.00,  -,  Unavailable to play
+terlalu tinggi,  juicy luicy,  sentimental, 0.00,  -,  Unavailable to play
+ testing, pujo, testing, 31.95, https://www.youtube.com/watch?v=8Xf6gyW_o0U, Available to play
+theperfectpair,   beabadoobee,   Beatopia, 155.00,   https://www.youtube.com/watch?v=HwtEBQiuX-c,   Available to play
