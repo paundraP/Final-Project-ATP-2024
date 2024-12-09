@@ -1,4 +1,0 @@
-title, singer, album, duration
-gacorrek, afin, ibudqa, 2.99
-i love you , yudi, cinta, 2.99
-lover, taylor swift , gas, 3.41
