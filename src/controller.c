@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <mpg123.h>
 #include "dto.h"
+#include "mpg123.h"
 
 void SpotifyText(){
     printf("\033[1;32m"); // Set text color to bright green
@@ -378,6 +379,7 @@ int listFileInPlaylistFolder(){
 
 Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
     char title[50], singer[50], album[50], url[256], status[20], path[64], command[256];
+
     float duration;
     FILE *fptr;
     char readData[1024];
@@ -415,7 +417,6 @@ Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
 
     while (fgets(readData, sizeof(readData), fptr)) {
         readData[strcspn(readData, "\n")] = '\0';
-
         if (sscanf(readData, "%[^,],%[^,],%[^,],%f,%[^,],%[^,]", title, singer, album, &duration, url, status) == 6) {    
             if (isEmptyOrSpaces(title)) {
                 system("clear");
@@ -459,7 +460,6 @@ Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
             }else{
                 printf("\n\033[0;42mSong '%s' added to playlist '%s' but unavailable to play.\033[0m\n", title, targetPlaylist->playlistName);
             }
-
         }else{
             printf("\033[0;37;41mskipping data in line %d error to parse\033[0m",idx);
         }
@@ -520,38 +520,6 @@ void playProgressBar(int totalSeconds) {
         int c = getchar();
         if (c != EOF) { 
             if (c == '\n') {
-                disableNonBlockingInput(); // Restore normal input mode
-                printf("\n\t\t\tProgress interrupted.\n");
-                return;
-            }
-        }
-        int progress = (progressBarWidth * elapsed) / totalSeconds; 
-        printf("\r\t\t\t[");
-        for (int i = 0; i < progress; i++) 
-            printf("#");
-        for (int i = progress; i < progressBarWidth; i++) 
-            printf(" ");
-        printf("] %3d%%", (progress * 100) / progressBarWidth);
-        
-        fflush(stdout);
-        sleep(1);
-    }
-}
-
-
-
-void playProgressBar(int totalSeconds) {
-    const int progressBarWidth = 100;
-    
-    printf("\n\n\t\t\tSong Progress:\n\n");
-    fflush(stdout);
-
-    enableNonBlockingInput();
-
-    for (int elapsed = 0; elapsed <= totalSeconds; elapsed++) {
-        int c = getchar();
-        if (c != EOF) { 
-            if (c == '\n') {
                 disableNonBlockingInput();
                 printf("\n\t\t\tProgress interrupted.\n");
                 return;
@@ -569,8 +537,6 @@ void playProgressBar(int totalSeconds) {
         sleep(1);
     }
 }
-
-
 
 void playSong(Playlist* playlist, int index, char songName[]) {
     Playlist* temp = findPlaylistByIndex(playlist, index);

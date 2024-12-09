@@ -128,7 +128,6 @@ Playlist* playlistMenu(Playlist* playlist) {
                             printf("\n\033[0;37;41mThe singer is required.\033[0m\n");
                             break;
                         }
-
                         printf("Enter the album of the song to add: ");
                         fgets(album, sizeof(album), stdin); 
                         album[strcspn(album, "\n")] = '\0';
@@ -160,7 +159,6 @@ Playlist* playlistMenu(Playlist* playlist) {
                                 strcpy(status, "Unavailable to play");
                             }
                         }
-
                         status[strcspn(status, "\n")] = '\0';
                         strip(title);
                         strip(singer);
@@ -224,6 +222,7 @@ Playlist* playlistMenu(Playlist* playlist) {
                         }
 
                         if(curr->song!=NULL){
+
                             printSongInsidePlaylist(playlist, idxtoplay);
                             printf("enter the name of the song you want to play: ");
                             fgets(play, sizeof(play), stdin); 
@@ -241,7 +240,6 @@ Playlist* playlistMenu(Playlist* playlist) {
                         }
                         printf("\n\033[0;37;41mInvalid number.\033[0m\n");   
                     }
-                    
                     break;
                 case 'e':                           
                     system("clear");
@@ -328,6 +326,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                                 printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
                                 break;
                             }
+
                         }else{
                             char ch;
                             while ((ch = getchar()) != '\n' && ch != EOF) {
@@ -338,7 +337,6 @@ Playlist* dashboardMenu(Playlist* playlist){
                         
                     }
                     break;
-
                 case 'd':                       
                     system("clear");
                     SpotifyText();
@@ -355,6 +353,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                                 printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
                                 break;
                             }
+
                         }else{
                             char ch;
                             while ((ch = getchar()) != '\n' && ch != EOF) {
@@ -372,9 +371,6 @@ Playlist* dashboardMenu(Playlist* playlist){
                         printf("Enter playlist name: ");
                         fgets(playlistName, sizeof(playlistName), stdin); 
                         playlistName[strcspn(playlistName, "\n")] = '\0';
-                        strip(playlistName);
-                        system("clear");
-                        SpotifyText();
                         playlist = readPlaylist(playlist,playlistName);
                     }
                     break;
@@ -398,5 +394,6 @@ int main(){
     SpotifyText();
     playlists = dashboardMenu(playlists);
     free(playlists);
+    
     return 0;
 }
