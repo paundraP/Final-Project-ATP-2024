@@ -1,16 +1,26 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <dirent.h>
 #include <ctype.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <math.h>
 #include <termios.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include "mpg123.h"
 #include "dto.h"
+
+bool isEmptyOrSpaces(const char *str) {
+    while (*str) {
+        if (!isspace((unsigned char)*str)) return false; // If a non-space character is found, return false
+        str++;
+    }
+    return true; // If no non-space characters are found, return true
+}
 
 void enableNonBlockingInput() {
     int flags = fcntl(STDIN_FILENO, F_GETFL, 0); // Get current flags
@@ -319,7 +329,7 @@ Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
 
     if (fptr == NULL) {
         printf("\n\033[0;37;41mError: Unable to open file\033[0m\n");
-        return 0;
+        return playlist;
     }
     
     playlist = addNewPlaylist(playlist,playlistName);
@@ -333,7 +343,18 @@ Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
     while (fgets(readData, sizeof(readData), fptr)) {
         readData[strcspn(readData, "\n")] = '\0';
 
-        if (sscanf(readData, "%[^,],%[^,],%[^,],%f,%[^,],%[^,]", title, singer, album, &duration, url, status) == 6) {
+        if (sscanf(readData, "%[^,],%[^,],%[^,],%f,%[^,],%[^,]", title, singer, album, &duration, url, status) == 6) {    
+            if (isEmptyOrSpaces(title)) strcpy(title, "unknown");
+            if (isEmptyOrSpaces(singer)) strcpy(singer, "unknown");
+            if (isEmptyOrSpaces(album)) strcpy(album, "unknown");
+            if (isEmptyOrSpaces(url)) strcpy(url, "unknown");
+            if (isEmptyOrSpaces(status)) strcpy(status, "unknown");
+
+            strip(title);
+            strip(singer);
+            strip(album);            
+            strip(url);
+            strip(status);
             addSongToPlaylist(playlist, idx, title, singer, album, duration, url, status);
         }else{
             printf("\033[0;37;41mskipping data in line %d error to parse\033[0m",idx);

@@ -237,18 +237,35 @@ Playlist* playlistMenu(Playlist* playlist) {
                     SpotifyText();
                     printPlaylist(playlist);
                     printf("enter the number of playlist that contains the song you want to play: ");
-                    scanf(" %d", &idxtoplay);
-                    getchar();
-                    printSongInsidePlaylist(playlist, idxtoplay);
-                    printf("enter the name of the song you want to play: ");
-                    fgets(play, sizeof(play), stdin); 
-                    play[strcspn(play, "\n")] = '\0';
-                    strip(play);
-                    playSong(playlist, idxtoplay, play);
-                    char ch;
-                    if ((ch = getchar()) == '\n') {
-                        break;
+                    // scanf(" %d", &idxtoplay);
+                    // getchar();
+                    if(scanf(" %d",&idxtoplay)){
+                        getchar();
+                        Playlist* curr=findPlaylistByIndex(playlist,idxtoplay);
+                        if(curr == NULL){
+                            printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
+                            break;
+                        }
+
+                        if(curr->song!=NULL){
+                            printSongInsidePlaylist(playlist, idxtoplay);
+                            printf("enter the name of the song you want to play: ");
+                            fgets(play, sizeof(play), stdin); 
+                            play[strcspn(play, "\n")] = '\0';
+                            strip(play);
+                            playSong(playlist, idxtoplay, play);
+                        }else{
+                            printf("\n\033[0;37;41mPlaylist is empty.\033[0m\n"); 
+                        }
+                        
+                    }else{
+                        char ch;
+                        while ((ch = getchar()) != '\n' && ch != EOF) {
+                            continue;
+                        }
+                        printf("\n\033[0;37;41mInvalid number.\033[0m\n");   
                     }
+                    
                     break;
                 case 'e':                           
                     system("clear");
@@ -325,7 +342,12 @@ Playlist* dashboardMenu(Playlist* playlist){
                         printf("enter the number of the playlist you want to delete: ");                        
                         if(scanf(" %d",&idxtoremove)){
                             getchar();
-                            playlist = deletePlaylist(playlist, idxtoremove);
+                            if(findPlaylistByIndex(playlist,idxtoremove)){
+                                playlist = deletePlaylist(playlist, idxtoremove);                                
+                            }else{
+                                printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
+                                break;
+                            }
                         }else{
                             char ch;
                             while ((ch = getchar()) != '\n' && ch != EOF) {
@@ -337,8 +359,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                     }
                     break;
 
-                case 'd':
-                       
+                case 'd':                       
                     system("clear");
                     SpotifyText();
                     if(playlist == NULL){
@@ -348,7 +369,12 @@ Playlist* dashboardMenu(Playlist* playlist){
                         printf("Which playlist you want to save? (choose number of playlist): ");
                         if(scanf(" %d", &save)){
                             getchar();
-                            savePlaylist(playlist, save);
+                            if(findPlaylistByIndex(playlist,save)){
+                                savePlaylist(playlist, save);
+                            }else{
+                                printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
+                                break;
+                            }
                         }else{
                             char ch;
                             while ((ch = getchar()) != '\n' && ch != EOF) {
@@ -367,7 +393,15 @@ Playlist* dashboardMenu(Playlist* playlist){
                         fgets(playlistName, sizeof(playlistName), stdin); 
                         playlistName[strcspn(playlistName, "\n")] = '\0';
                         strip(playlistName);
+                        // if(){
+                        system("clear");
+                        SpotifyText();
                         playlist = readPlaylist(playlist,playlistName);
+                        // }else{
+                            // 
+                            // SpotifyText();
+                            // printf("\n\033[0;37;41mThe file is not known, or you're mistyping.\033[0m\n");
+                        // }
                     }
                     break;
 
