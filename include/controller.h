@@ -22,4 +22,5 @@ float getSongDuration(char filename[]);
 char* escape(char* str);
 void SpotifyText();
 
+
 #endif

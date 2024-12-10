@@ -149,7 +149,7 @@ Playlist* playlistMenu(Playlist* playlist) {
                             snprintf(path, sizeof(path), "songs/%s.mp3",title );
                             char* songName = escape(path);
                             char* link = escape(url);
-                            snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o %s %s", songName,link);
+                            snprintf(command, sizeof(command), "yt-dlp -x --audio-format mp3 --audio-quality 0 -o %s %s --no-warnings", songName,link);
                             system(command);
                             duration = getSongDuration(path);
                             if(duration >0.00){
@@ -232,7 +232,7 @@ Playlist* playlistMenu(Playlist* playlist) {
                         }else{
                             printf("\n\033[0;37;41mPlaylist is empty.\033[0m\n"); 
                         }
-                        
+                        break;
                     }else{
                         char ch;
                         while ((ch = getchar()) != '\n' && ch != EOF) {
@@ -376,7 +376,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                     break;
 
                 case 'f':
-                    printf("Exiting...");
+                    printf("Exiting...\n");
                     return playlist;
 
                 default:

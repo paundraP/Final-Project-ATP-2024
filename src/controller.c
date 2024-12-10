@@ -33,10 +33,10 @@ void SpotifyText(){
     printf("\n  ██████████████████████████████                    ███                                         ████████████    ████████████                  ");
     printf("\n    ██████████████████████████                      ███                                         ████████████    ████████████                  ");
     printf("\n     ████████████████████████                                                                   ████████████    ████████████                  ");
-    printf("\n        ██████████████████                                                                      ████████████    ████████████                  ");
+    printf("\n        ██████████████████                            SUPPORT FOR LINUX/UNIX                    ████████████    ████████████                  ");
     printf("\n           ████████████                                                                         ████████████    ████████████                  ");
     printf("\n"); 
-    printf("\n     SUPPORT FOR LINUX/UNIX");
+    // printf("\n");
     printf("\n\n\n\n");
     printf("\033[0m"); // Reset text color to default
 
@@ -454,7 +454,7 @@ Playlist* readPlaylist(Playlist* playlist, char playlistName[]) {
                 snprintf(path, sizeof(path), "songs/%s.mp3",title );
                 char* songName = escape(path);
                 char* link = escape(url);
-                snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o %s %s", songName,link);
+                snprintf(command, sizeof(command), "yt-dlp -q -x --audio-format mp3 --audio-quality 0 -o %s %s --no-warnings", songName,link);
                 system(command);
                 printf("\n\033[0;42mSong '%s' added to playlist '%s' and available to play.\033[0m\n", title, targetPlaylist->playlistName);
             }else{
@@ -521,14 +521,14 @@ void playProgressBar(int totalSeconds) {
         if (c != EOF) { 
             if (c == '\n') {
                 disableNonBlockingInput();
-                printf("\n\t\t\tProgress interrupted.\n");
+                printf("\n\t\t\t\033[0;37;41mProgress interrupted.\033[0m\n");
                 return;
             }
         }
         int progress = (progressBarWidth * elapsed) / totalSeconds; 
         printf("\r\t\t\t[");
         for (int i = 0; i < progress; i++) 
-            printf("#");
+            printf("\033[0;42m#\033[0m");
         for (int i = progress; i < progressBarWidth; i++) 
             printf(" ");
         printf("] %3d%%", (progress * 100) / progressBarWidth);
@@ -536,6 +536,8 @@ void playProgressBar(int totalSeconds) {
         fflush(stdout);
         sleep(1);
     }
+    
+    disableNonBlockingInput();
 }
 
 void playSong(Playlist* playlist, int index, char songName[]) {
@@ -551,21 +553,21 @@ void playSong(Playlist* playlist, int index, char songName[]) {
             int minutes = (int)curr->time / 60;
             int seconds = (int)curr->time % 60;
 
-            printf("\033[0;37;42m+-----------------------------------------------------------+\033[0m\n");
-            printf("\033[0;37;42m|                       Now playing:                        |\033[0m\n");
-            printf("\033[0;37;42m+-----------------------------------------------------------+\033[0m\n");
+            printf("+-----------------------------------------------------------+\n");
+            printf("|                       Now playing:                        |\n");
+            printf("+-----------------------------------------------------------+\n");
             printf("| Source: %s\n", curr->url);
             printf("| Title: %s\n", curr->title);
             printf("| Singer: %s\n", curr->singer);
             printf("| Album: %s\n", curr->album);
             printf("| Duration: %2d min %2d sec\n", minutes, seconds);
-            printf("\033[0;37;42m+-----------------------------------------------------------+\033[0m\n");
+            printf("+-----------------------------------------------------------+\n");
 
             char command[256];
-            char* songNamewithEscape = escape(songName);
+            // char* songNamewithEscape = escape(songName);
             int duration = (int)curr->time + 1;
 
-            snprintf(command, sizeof(command), "mpg123 -q 'songs/%s.mp3'", songNamewithEscape);
+            snprintf(command, sizeof(command), "mpg123 -q 'songs/%s.mp3'", songName);
 
             pid_t pid = fork();
             if (pid == 0) {
@@ -579,17 +581,22 @@ void playSong(Playlist* playlist, int index, char songName[]) {
                 perror("fork failed");
                 return;
             }
-            printf("Song Completed\n");
+            // if(getchar() == "q"){
+            //     printf("\n\033[0;42mSong stopped\n\033[0m");
+            //     return;
+            // }
+            printf("\n\033[0;42mSong Completed\033[0m\n");
+            // }
             return;
-            printf("Song Completed\n");
-            return;
+
         }
         curr = curr->next;
     }
 
     if (curr == NULL) {
-        printf("\033[0;37;41mSong not found or not playable!\033[0m\n");
+        printf("\n\033[0;37;41mSong not found or not playable!\033[0m\n");
     }
+    return;
 }
 
 
