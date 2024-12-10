@@ -13,10 +13,10 @@ void printSongInsidePlaylist(Playlist* playlist, int index) {
     if(curr != NULL){
         Song* song = curr->song; 
         int len = strlen(curr->playlistName);
-        int width = len > 159 ? len : 159;
+        int width = len > 100 ? len : 100;
         int textLength = strlen(curr->playlistName);
         int leftPadding = (width - textLength) / 2;
-        int rightPadding = width - textLength - leftPadding - 52;
+        int rightPadding = width - textLength - leftPadding + 7 ;
         if(song != NULL){
             printf("+%.*s+\n", 148, "=====================================================================================================================");
             printf("|\033[1;32m");
