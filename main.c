@@ -91,6 +91,10 @@ Playlist* playlistMenu(Playlist* playlist) {
                     printf("see song inside playlist!\n");
                     printf("Choose number of playlist: ");
                     if(scanf("%d",&idx)){
+                        if(idx <= 0){
+                            printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
+                            break;
+                        }
                         printSongInsidePlaylist(playlist,idx);
                     }else{
                         char ch;
@@ -109,7 +113,7 @@ Playlist* playlistMenu(Playlist* playlist) {
                     printf("Choose number of playlist: ");
                     if(scanf("%d",&idx)){
                         getchar();
-                        if(!findPlaylistByIndex(playlist,idx)){
+                        if(!findPlaylistByIndex(playlist,idx) || idx <= 0){
                             printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
                             break;
                         }
@@ -124,6 +128,10 @@ Playlist* playlistMenu(Playlist* playlist) {
                         printf("Enter the singer of the song to add: ");
                         fgets(singer, sizeof(singer), stdin); 
                         singer[strcspn(singer, "\n")] = '\0';
+                        if (strlen(singer) > 40) {
+                            printf("\n\033[0;37;41mInput is too long\033[0m\n");
+                            break;
+                        }
                         if(singer[0] == '\0'){
                             printf("\n\033[0;37;41mThe singer is required.\033[0m\n");
                             break;
@@ -131,6 +139,10 @@ Playlist* playlistMenu(Playlist* playlist) {
                         printf("Enter the album of the song to add: ");
                         fgets(album, sizeof(album), stdin); 
                         album[strcspn(album, "\n")] = '\0';
+                        if (strlen(album) > 40) {
+                            printf("\n\033[0;37;41mInput is too long\033[0m\n");
+                            break;
+                        }
                         if(album[0] == '\0'){
                             strcpy(album, "Unknown");
                             album[strcspn(album, "\n")] = '\0';
@@ -139,6 +151,10 @@ Playlist* playlistMenu(Playlist* playlist) {
                         printf("Enter the youtube url of the song to add \n(If filled, the music will be available to play): ");
                         fgets(url, sizeof(url), stdin); 
                         url[strcspn(url, "\n")] = '\0';
+                        if (strlen(url) > 40) {
+                            printf("\n\033[0;37;41mInput is too long\033[0m\n");
+                            break;
+                        }
                         if(url[0] == '\0'){
                             strcpy(status, "Unavailable to play");
                             strcpy(url, "-");
@@ -182,15 +198,19 @@ Playlist* playlistMenu(Playlist* playlist) {
                     if(scanf(" %d",&idxtoremove)){
                         getchar();
                         Playlist* curr=findPlaylistByIndex(playlist,idxtoremove);
-                        if(curr == NULL){
+                        if(curr == NULL || idxtoremove <= 0){
                             printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
                             break;
                         }
-                        if(curr->song!=NULL){
+                        if(curr->song!=NULL || idxtoremove > 0){
                             printSongInsidePlaylist(playlist,idxtoremove);
                             printf("Enter the name of the song to remove: ");
                             fgets(remove, sizeof(remove), stdin); 
                             remove[strcspn(remove, "\n")] = '\0';
+                            if (strlen(remove) > 40) {
+                                printf("\n\033[0;37;41mInput is too long\033[0m\n");
+                                break;
+                            }
                             strip(remove);
                             system("clear");
                             SpotifyText();
@@ -216,17 +236,21 @@ Playlist* playlistMenu(Playlist* playlist) {
                     if(scanf("%d",&idxtoplay)){
                         getchar();
                         Playlist* curr=findPlaylistByIndex(playlist,idxtoplay);
-                        if(curr == NULL){
+                        if(curr == NULL || idxtoplay <= 0){
                             printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
                             break;
                         }
 
-                        if(curr->song!=NULL){
+                        if(curr->song!=NULL || idxtoplay > 0 ){
 
                             printSongInsidePlaylist(playlist, idxtoplay);
                             printf("enter the name of the song you want to play: ");
                             fgets(play, sizeof(play), stdin); 
                             play[strcspn(play, "\n")] = '\0';
+                            if (strlen(play) > 40) {
+                                printf("\n\033[0;37;41mInput is too long\033[0m\n");
+                                break;
+                            }
                             strip(play);
                             playSong(playlist, idxtoplay, play);
                         }else{
@@ -290,6 +314,10 @@ Playlist* dashboardMenu(Playlist* playlist){
                     printf("Enter playlist name: ");
                     fgets(playlistName, sizeof(playlistName), stdin); 
                     playlistName[strcspn(playlistName, "\n")] = '\0';
+                    if (strlen(playlistName) > 40) {
+                            printf("\n\033[0;37;41mInput is too long\033[0m\n");
+                            break;
+                    }
                     if(playlistName[0] == '\0'){
                             printf("\n\033[0;37;41mPlaylist name is required.\033[0m\n");
                             break;
@@ -320,6 +348,10 @@ Playlist* dashboardMenu(Playlist* playlist){
                         printf("enter the number of the playlist you want to delete: ");                        
                         if(scanf(" %d",&idxtoremove)){
                             getchar();
+                            if(idxtoremove <= 0){
+                                printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
+                                break;
+                            }
                             if(findPlaylistByIndex(playlist,idxtoremove)){
                                 playlist = deletePlaylist(playlist, idxtoremove);                                
                             }else{
@@ -347,7 +379,7 @@ Playlist* dashboardMenu(Playlist* playlist){
                         printf("Which playlist you want to save? (choose number of playlist): ");
                         if(scanf(" %d", &save)){
                             getchar();
-                            if(findPlaylistByIndex(playlist,save)){
+                            if(findPlaylistByIndex(playlist,save) || save > 0){
                                 savePlaylist(playlist, save);
                             }else{
                                 printf("\n\033[0;37;41mInvalid number, playlist not exists.\033[0m\n");
@@ -371,8 +403,13 @@ Playlist* dashboardMenu(Playlist* playlist){
                         printf("Enter playlist name: ");
                         fgets(playlistName, sizeof(playlistName), stdin); 
                         playlistName[strcspn(playlistName, "\n")] = '\0';
+                        if (strlen(playlistName) > 40) {
+                            printf("\n\033[0;37;41mInput is too long\033[0m\n");
+                            break;
+                        }
                         playlist = readPlaylist(playlist,playlistName);
                     }
+                    sortByTitle(playlist);
                     break;
 
                 case 'f':
