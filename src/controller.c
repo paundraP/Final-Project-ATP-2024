@@ -553,15 +553,15 @@ void playSong(Playlist* playlist, int index, char songName[]) {
             int minutes = (int)curr->time / 60;
             int seconds = (int)curr->time % 60;
 
-            printf("+-----------------------------------------------------------+\n");
-            printf("|                       Now playing:                        |\n");
-            printf("+-----------------------------------------------------------+\n");
+            printf("+=====================================================================================================================+\n");
+            printf("|                                                   Now playing:                                                      |\n");
+            printf("+=====================================================================================================================+\n");
             printf("| Source: %s\n", curr->url);
             printf("| Title: %s\n", curr->title);
             printf("| Singer: %s\n", curr->singer);
             printf("| Album: %s\n", curr->album);
             printf("| Duration: %2d min %2d sec\n", minutes, seconds);
-            printf("+-----------------------------------------------------------+\n");
+            printf("+=====================================================================================================================+\n");
 
             char command[256];
             // char* songNamewithEscape = escape(songName);
