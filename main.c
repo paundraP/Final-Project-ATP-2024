@@ -427,10 +427,12 @@ Playlist* dashboardMenu(Playlist* playlist){
 }
 
 int main(){
-    Playlist* playlists = NULL;
-    SpotifyText();
-    playlists = dashboardMenu(playlists);
-    free(playlists);
+    Playlist* playlist = NULL;
+    playlist = readPlaylist(playlist,"pujo");
+    playSong(playlist, 1, "theperfectpair");
+    //SpotifyText();
+    //playlists = dashboardMenu(playlists);
+    free(playlist);
     
     return 0;
 }

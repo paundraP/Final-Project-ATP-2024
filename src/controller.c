@@ -556,11 +556,11 @@ void playSong(Playlist* playlist, int index, char songName[]) {
             printf("+=====================================================================================================================+\n");
             printf("|                                                   Now playing:                                                      |\n");
             printf("+=====================================================================================================================+\n");
-            printf("| Source: %s\n", curr->url);
-            printf("| Title: %s\n", curr->title);
-            printf("| Singer: %s\n", curr->singer);
-            printf("| Album: %s\n", curr->album);
-            printf("| Duration: %2d min %2d sec\n", minutes, seconds);
+            printf("| Source: %-108s|\n", curr->url);
+            printf("| Title: %-109s|\n", curr->title);
+            printf("| Singer: %-108s|\n", curr->singer);
+            printf("| Album: %-109s|\n", curr->album);
+            printf("| Duration: %2d min %2d sec %-92s|\n", minutes, seconds," ");
             printf("+=====================================================================================================================+\n");
 
             char command[256];
