@@ -1,6 +1,6 @@
 # Final Project Algoritma dan Teknik Pemrograman 2024 | Spotify
 
-Repository ini berisi source code dalam pembuatan aplikasi penyimpan list musik seperti spotify menggunakan bahasa C.
+Repository ini berisi source code dalam pembuatan aplikasi pemutar musik seperti spotify menggunakan bahasa C.
 
 Disusun oleh : 
 
@@ -34,3 +34,5 @@ make run
 - **main.c** : Entry point dari program spotify ini, penerapan fungsi fungsi pembantu yang sudah dideklarasikan pada direktori include.
 
 - **playlist** : Isi dari playlist playlist yang sudah dibuat
+
+- **songs** : Berisi kumpulan lagu yang telah dimasukkan kedalam playlist
